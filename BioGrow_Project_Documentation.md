@@ -43,6 +43,99 @@ BioGrow provides a holistic solution by combining three core pillars:
 * **Solution System:** Peers can comment solutions. The Original Poster (OP) marks the best solution.
 * **AI Validation (Safety Net):** Before points are awarded, the "Best Solution" is cross-referenced by the Gemini API to ensure safety and relevance.
 
+
+
+#### 6.2.1 Create New Topic (Posting an Issue)
+
+Farmers can raise a new issue by submitting relevant details about their problem.
+ 
+**User Inputs:**
+- Title  
+- Description  
+
+**How It Works:**
+- **Text Input:**  
+  When the user clicks **Submit**, the title and description are saved in the database.
+- **Voice Input:**  
+  When the microphone button is clicked, the browser listens to the user’s voice, converts speech into text using the Web Speech API, and automatically fills the input fields.
+- **Image Upload:**  
+  If the user uploads an image (e.g., a diseased leaf):
+  - The actual image file is stored on the server.
+  - The image file path/link is saved in the database and associated with the topic.
+
+
+#### 6.2.2 Topic Feed (Main Topic List)
+
+This is the primary interface displaying all recently raised issues.
+
+**Concept:**
+- A scrollable list of topic cards.
+- Each card displays a short summary of the issue.
+
+**How It Works:**
+- Pinned (important) topics are displayed at the top.
+- Remaining topics are sorted by most recent first.
+- Only 10 topics are loaded per request to prevent performance issues.
+- A **“Next Page”** button allows loading additional topics.
+
+
+#### 6.2.3 Priority Pinning (Gamification Feature)
+
+Allows users to use earned points to highlight urgent issues.
+
+**Concept:**
+- A **“Pay with Points”** option that pins a topic to the top of the feed.
+
+**How It Works:**
+- The system checks the user’s point balance.
+- If sufficient points are available:
+  - Points are deducted.
+  - The topic is marked as **Pinned** for 24 hours.
+- If points are insufficient:
+  - An error message **“Insufficient funds”** is displayed.
+
+
+#### 6.2.4 Smart Suggestion Feature (Duplicate Issue Prevention)
+
+Helps users find existing solutions while typing a new issue.
+
+**How It Works:**
+- As the user types the issue title, a JavaScript event listener captures the text.
+- The frontend sends the text to the backend via an AJAX request.
+- The backend searches previously solved topics for similar keywords.
+- Matching results are displayed as clickable suggestions, for example:  
+  **[SOLVED] White fungus on potato leaves**
+- The user can open the suggested solution and avoid creating a duplicate topic.
+
+
+#### 6.2.5 Search and Category Filtering
+
+Improves discoverability of forum topics.
+
+**Concept:**
+- Category filters such as **Pests**, **Soil**, and **Weather**.
+
+**How It Works:**
+- **Search Bar:**  
+  The system searches titles and descriptions for matching keywords entered by the user.
+- **Category Filter:**  
+  Selecting a category displays only topics tagged under that category.
+
+
+#### 6.2.6 Edit & Delete Topics
+
+Allows users to manage their own forum posts.
+
+**Concept:**
+- Users can edit mistakes or remove their topics.
+
+**How It Works:**
+- Before allowing edit or delete actions:
+  - The system compares the **Logged-in User ID** with the **Topic Author ID**.
+- If both match, the action is allowed.
+- If they do not match, the action is blocked.
+
+
 ### 6.3. The Economy of Points (Gamification)
 * **Earning:** Users earn points by having their answers marked as "Solutions" or by daily check-ins.
 * **Spending (Redemption):** Points can be redeemed for premium digital features:
@@ -173,4 +266,5 @@ To automate the decision-making process for the "Manual Observation Framework" (
     * **Rule 1:** If `Week_Number > 8 AND Canopy_Status == "Open"`:
         * Trigger **"Low Biomass Alert"** (Yield potential significantly reduced).
     * **Rule 2:** If `Week_Number < 4 AND Canopy_Status == "Closed"`:
+
         * Trigger **"Overcrowding Alert"** (High risk of microclimate-induced fungal disease).
