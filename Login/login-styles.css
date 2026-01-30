@@ -55,6 +55,14 @@ body {
     border-color: #dee2e6; 
 }
 
+.forgot-password-link {
+    text-decoration: none;
+}
+
+.forgot-password-link:hover {
+    text-decoration: underline;
+}
+
 /* Toggle Switch Buttons */ 
 .transition-all { 
     transition: all 0.3s ease; 
