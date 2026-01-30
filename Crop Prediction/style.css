@@ -1,0 +1,18 @@
+body {
+    background: #f2fbf5;
+    font-family: system-ui, sans-serif;
+}
+
+.card {
+    border-radius: 16px;
+    border: none;
+}
+
+.result-green {
+    background: #ecfdf5;
+    border-radius: 12px;
+}
+
+.progress {
+    height: 6px;
+}
