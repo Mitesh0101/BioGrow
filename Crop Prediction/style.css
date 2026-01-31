@@ -8,6 +8,19 @@ body {
     border: none;
 }
 
+.avatar-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.activate{
+    background-color: #dbfce7;
+}
+
 .result-green {
     background: #ecfdf5;
     border-radius: 12px;

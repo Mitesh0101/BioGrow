@@ -19,6 +19,10 @@ body {
     justify-content: center;
 }
 
+.activate{
+    background-color: #dbfce7;
+}
+
 /* Hero Section Gradient */
 .hero-section {
     background: linear-gradient(135deg, var(--primary-green), var(--dark-green));

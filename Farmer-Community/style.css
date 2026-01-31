@@ -10,6 +10,19 @@
     padding: 2.25rem 0;
 }
 
+.avatar-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.activate{
+    background-color: #dbfce7;
+}
+
 body {
     background: #f7faf9;
     font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
