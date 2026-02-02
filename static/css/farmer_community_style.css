@@ -19,9 +19,11 @@
     justify-content: center;
 }
 
-.activate{
+.nav-link.active{
     background-color: #dbfce7;
+    border-radius: 8px;
 }
+
 
 body {
     background: #f7faf9;

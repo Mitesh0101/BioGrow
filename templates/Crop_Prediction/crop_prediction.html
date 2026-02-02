@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block title %}
+Smart Crop Recommendation | BioGrow
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/crop_prediction_style.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-5">
+
+    <!-- Page Heading -->
+    <div class="text-center mb-5">
+        <img src="{{ url_for('static', filename='images/Logo_Trim.png') }}" width="90">
+        <h3 class="fw-bold mt-3">Smart Crop Recommendation</h3>
+        <p class="text-muted">
+            Enter soil and climate data to get AI-powered crop recommendations
+        </p>
+    </div>
+
+    <div class="row g-4">
+
+        <!-- Form Section -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm p-4">
+                <h5 class="fw-bold mb-3">Soil & Climate Data</h5>
+
+                <form onsubmit="predictCrop(event)">
+
+                    <div class="mb-2">
+                        <label class="form-label">Nitrogen (N) - kg/hectare</label>
+                        <input type="number" id="nitrogen" class="form-control" required>
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label">Phosphorus (P) - kg/hectare</label>
+                        <input type="number" id="phosphorus" class="form-control" required>
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label">Potassium (K) - kg/hectare</label>
+                        <input type="number" id="potassium" class="form-control" required>
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label">Soil pH</label>
+                        <input type="number" step="0.1" id="ph" class="form-control" required>
+                    </div>
+
+                    <div class="mb-2">
+                        <label class="form-label">Average Rainfall (mm/year)</label>
+                        <input type="number" id="rainfall" class="form-control" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Average Temperature (°C)</label>
+                        <input type="number" id="temperature" class="form-control" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100">
+                        🌾 Get Recommendation
+                    </button>
+
+                </form>
+            </div>
+        </div>
+
+        <!-- Result Section -->
+        <div class="col-lg-6">
+            <div class="card shadow-sm p-4 h-100">
+
+                <!-- Before Prediction -->
+                <div id="result-before">
+                    <h5 class="fw-bold">Recommendation Result</h5>
+                    <p class="text-muted text-center mt-4">
+                        🌱 Enter values and click the button to get recommendations
+                    </p>
+                </div>
+
+                <!-- After Prediction -->
+                <div id="result-after" class="d-none">
+
+                    <h5 class="fw-bold mb-3">Recommendation Result</h5>
+
+                    <div class="p-3 mb-3 rounded bg-light">
+                        <small class="text-success fw-semibold">Recommended Crop</small>
+                        <h4 class="fw-bold mb-2" id="cropName"></h4>
+
+                        <div class="d-flex align-items-center gap-3">
+                            <div class="progress flex-grow-1">
+                                <div id="matchBar" class="progress-bar bg-success"></div>
+                            </div>
+                            <small class="fw-semibold text-success" id="matchText"></small>
+                        </div>
+                    </div>
+
+                    <div class="border rounded p-3 mb-3">
+                        <p class="fw-semibold mb-1">Recommended Fertilizer</p>
+                        <p class="text-muted mb-2" id="fertilizer"></p>
+                        <a href="#" class="text-success fw-semibold text-decoration-none">
+                            ⬇ Download Full PDF Schedule
+                        </a>
+                    </div>
+
+                    <div class="small">
+                        <div class="d-flex justify-content-between py-2 border-bottom">
+                            <span class="text-muted">Sowing Season</span>
+                            <span class="fw-semibold" id="season"></span>
+                        </div>
+                        <div class="d-flex justify-content-between py-2 border-bottom">
+                            <span class="text-muted">Expected Yield</span>
+                            <span class="fw-semibold" id="yield"></span>
+                        </div>
+                        <div class="d-flex justify-content-between py-2 border-bottom">
+                            <span class="text-muted">Water Requirement</span>
+                            <span class="fw-semibold" id="water"></span>
+                        </div>
+                        <div class="d-flex justify-content-between pt-2">
+                            <span class="text-muted">Market Price</span>
+                            <span class="fw-semibold text-success" id="price"></span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+<script src="{{ url_for('static', filename='js/crop_prediction_script.js') }}"></script>
+{% endblock %}

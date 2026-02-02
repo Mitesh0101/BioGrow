@@ -6,16 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
     <title>BioGrow - Smart Agricultural Ecosystem</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home_page_style.css') }}">
 </head> 
 <body class="d-flex flex-column min-vh-100 bg-light">
     <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm sticky-top">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center gap-2" href="#">
-                <!-- <div class="d-flex align-items-center justify-content-center bg-success text-white rounded p-1" style="width: 40px; height: 40px;">
-                    <i data-lucide="sprout" width="24" height="24"></i>
-                </div> -->
-                <img src="../Logo_Trim.png" width="48" height="48">
+                <img src="{{ url_for('static', filename='images/Logo_Trim.png') }}" width="48" height="48">
                 <span class="fw-bold text-success fs-4">BioGrow</span>
             </a>
 
@@ -26,7 +23,7 @@
             <div class="collapse navbar-collapse justify-content-end" id="navbarContent">
                 <ul class="navbar-nav gap-2 mt-3 mt-md-0">
                     <li class="nav-item">
-                        <a href="#" class="nav-link d-flex align-items-center gap-2 px-3 rounded btn-hover-scale">
+                        <a href="{{ url_for('login') }}" class="nav-link d-flex align-items-center gap-2 px-3 rounded btn-hover-scale">
                             <i data-lucide="user" width="18"></i> Login/Register
                         </a>
                     </li>
@@ -47,7 +44,7 @@
                         Empowering farmers with AI-driven insights, community support, and real-time weather alerts
                     </p>
                     <div class="d-flex flex-wrap gap-3">
-                        <a href="#" class="btn btn-light btn-lg btn-hover-scale rounded-pill px-4 py-3 d-inline-flex align-items-center gap-2 text-success">
+                        <a href="{{ url_for('login') }}" class="btn btn-light btn-lg btn-hover-scale rounded-pill px-4 py-3 d-inline-flex align-items-center gap-2 text-success">
                             Get Started <i data-lucide="arrow-right" width="20"></i>
                         </a>
                     </div>
@@ -91,7 +88,7 @@
                                         <span class="text-secondary small mt-1">Climate-aware recommendations</span>
                                     </li>
                                 </ul>
-                                <a href="#" class="text-success text-decoration-none fw-bold d-inline-flex align-items-center gap-1">
+                                <a href="{{ url_for('login') }}" class="text-success text-decoration-none fw-bold d-inline-flex align-items-center gap-1">
                                     Try Now <i data-lucide="arrow-right" width="16"></i>
                                 </a>
                             </div>
@@ -122,7 +119,7 @@
                                         <span class="text-secondary small mt-1">Expert badges & recognition</span>
                                     </li>
                                 </ul>
-                                <a href="#" class="text-primary text-decoration-none fw-bold d-inline-flex align-items-center gap-1">
+                                <a href="{{ url_for('login') }}" class="text-primary text-decoration-none fw-bold d-inline-flex align-items-center gap-1">
                                     Join Forum <i data-lucide="arrow-right" width="16"></i>
                                 </a>
                             </div>
@@ -153,7 +150,7 @@
                                         <span class="text-secondary small mt-1">Location-based warnings</span>
                                     </li>
                                 </ul>
-                                <a href="#" class="text-warning text-decoration-none fw-bold d-inline-flex align-items-center gap-1" style="color: #fd7e14 !important;">
+                                <a href="{{ url_for('login') }}" class="text-warning text-decoration-none fw-bold d-inline-flex align-items-center gap-1" style="color: #fd7e14 !important;">
                                     View Forecast <i data-lucide="arrow-right" width="16"></i>
                                 </a>
                             </div>
@@ -215,7 +212,7 @@
                                         <span class="text-secondary small mt-1">Ad-free experience</span>
                                     </li>
                                 </ul>
-                                <a href="#" class="text-warning text-decoration-none fw-bold d-inline-flex align-items-center gap-1">
+                                <a href="{{ url_for('login') }}" class="text-warning text-decoration-none fw-bold d-inline-flex align-items-center gap-1">
                                     View Profile <i data-lucide="arrow-right" width="16"></i>
                                 </a>
                             </div>
@@ -246,7 +243,7 @@
                                         <span class="text-secondary small mt-1">Simple, intuitive UI</span>
                                     </li>
                                 </ul>
-                                <a href="#" class="text-danger text-decoration-none fw-bold d-inline-flex align-items-center gap-1">
+                                <a href="{{ url_for('login') }}" class="text-danger text-decoration-none fw-bold d-inline-flex align-items-center gap-1">
                                     Try It Out <i data-lucide="arrow-right" width="16"></i>
                                 </a>
                             </div>
@@ -263,7 +260,7 @@
                     <p class="lead text-white-50 mb-5">
                         Join thousands of farmers already using BioGrow to increase yields and profits
                     </p>
-                    <a href="#" class="btn btn-light btn-lg btn-hover-scale rounded-pill px-5 py-3 fw-bold text-success">
+                    <a href="{{ url_for('login') }}" class="btn btn-light btn-lg btn-hover-scale rounded-pill px-5 py-3 fw-bold text-success">
                         Get Started Free <i data-lucide="arrow-right" width="20"></i>
                     </a>
                 </div>
@@ -301,5 +298,5 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
 
-    <script src="script.js"></script>
+    <script src="{{ url_for('static', filename='js/home_page_script.js') }}"></script>
 </body>

@@ -19,8 +19,9 @@ body {
     justify-content: center;
 }
 
-.activate{
+.nav-link.active{
     background-color: #dbfce7;
+    border-radius: 8px;
 }
 
 /* Hero Section Gradient */

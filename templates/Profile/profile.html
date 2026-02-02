@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+
+{% block title %}Profile Card | BioGrow{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile_style.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+
+    <!-- mx-auto works when width is fixed and element is block element -->
+    <div class="profile-wrapper mx-auto">
+
+        <!-- Profile Header Section -->
+        <div class="profile-header text-white">
+
+            <!-- User Basic Info -->
+            <div class="d-flex align-items-center gap-3">
+                <div class="avatar">
+                    <img src="{{ url_for('static', filename='images/farmer.jpg') }}"
+                         class="w-100 h-100 rounded-circle">
+                </div>
+
+                <div>
+                    <h5 class="mb-0">John Doe</h5>
+                    <span class="mb-0">Farmer • Maharashtra</span>
+
+                    <!-- User Stats -->
+                    <div class="d-flex gap-2 mt-1">
+                        <span>🏅 1250 Points</span>
+                        <span>⭐ Level 4</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Bar Section -->
+            <div class="mt-2">
+                <div class="d-flex justify-content-between small mb-1">
+                    <span>Progress to Expert Badge</span>
+                    <span>1250 / 2000</span>
+                </div>
+
+                <!-- Progress bar shows percentage towards next badge -->
+                <div class="progress progress-sm">
+                    <div class="progress-bar bg-warning" style="width: 62%"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="row g-3 mt-1">
+            <div class="col-4">
+                <div class="stat-card">
+                    <h4>24</h4>
+                    <small>Questions Asked</small>
+                </div>
+            </div>
+
+            <div class="col-4">
+                <div class="stat-card">
+                    <h4>42</h4>
+                    <small>Answers Given</small>
+                </div>
+            </div>
+
+            <div class="col-4">
+                <div class="stat-card">
+                    <h4>15</h4>
+                    <small>Best Answers</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Achievements Section -->
+        <div class="section-card mt-3">
+            <h6 class="section-title">🏆 Achievements</h6>
+
+            <div class="achievement cream">
+                <strong>Helper</strong>
+                <span>Earn 25 helpful answers</span>
+            </div>
+
+            <div class="achievement blue">
+                <strong>Rising Star</strong>
+                <span>Earn 1000 points</span>
+            </div>
+
+            <!-- Locked achievements -->
+            <div class="achievement locked">
+                <strong>Expert</strong>
+                <span>Locked • Need 2000 points</span>
+            </div>
+
+            <div class="achievement locked">
+                <strong>Golden Turban</strong>
+                <span>Locked • Need 5000 points</span>
+            </div>
+        </div>
+
+        <!-- Rewards Section -->
+        <div class="section-card mt-3">
+            <h6 class="section-title">🎁 Available Rewards</h6>
+
+            <div class="reward green">
+                <div>
+                    <strong>Priority Pin (24h)</strong>
+                    <div class="small text-muted">Pin your question</div>
+                </div>
+                <span class="badge bg-success">100 pts</span>
+            </div>
+
+            <div class="reward purple">
+                <div>
+                    <strong>Ad-Free Mode (30 days)</strong>
+                    <div class="small text-muted">Enjoy distraction-free browsing</div>
+                </div>
+                <span class="badge bg-primary">300 pts</span>
+            </div>
+
+            <div class="reward yellow">
+                <div>
+                    <strong>Expert Badge</strong>
+                    <div class="small text-muted">Display expert status</div>
+                </div>
+                <span class="badge bg-warning text-dark">500 pts</span>
+            </div>
+
+            <!-- Locked reward -->
+            <div class="reward locked">
+                <div>
+                    <strong>Golden Turban Badge</strong>
+                    <div class="small text-muted">Ultimate recognition</div>
+                </div>
+                <span class="badge bg-secondary">1000 pts</span>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

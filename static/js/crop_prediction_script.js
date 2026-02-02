@@ -53,7 +53,7 @@ function predictCrop(event) {
     document.getElementById("water").innerText = cropData.water;
     document.getElementById("price").innerText = cropData.price;
 
-    document.getElementById("result-card-before-value").classList.add("d-none");
+    document.getElementById("result-before").classList.add("d-none");
+    document.getElementById("result-after").classList.remove("d-none");
 
-    document.getElementById("result-card-after-value").classList.remove("d-none");
 }
