@@ -8,7 +8,6 @@
 
 {% block content %}
 
-<!-- Hero Section -->
 <header class="hero-section text-white pt-5 mb-3">
     <div class="container">
         <div class="row align-items-end">
@@ -21,7 +20,7 @@
                 </span>
 
                 <h1 class="display-5 fw-bold mb-2">
-                    Welcome back, Rajesh! 🌾
+                    Welcome back, {{ session.full_name }}! 🌾
                 </h1>
 
                 <p class="lead opacity-75 mb-0">
@@ -29,7 +28,6 @@
                 </p>
             </div>
 
-            <!-- Weather Card -->
             <div class="col-lg-4 mt-4 mt-lg-0">
                 <div class="card border-0 bg-white bg-opacity-10 text-white weather-card rounded-4">
                     <div class="card-body d-flex align-items-center justify-content-between p-3">
@@ -46,12 +44,8 @@
     </div>
 </header>
 
-<!-- Main Content -->
 <main class="container">
-
-    <!-- Top Action Cards -->
     <div class="row g-4 mb-5">
-
         <div class="col-md-6">
             <div class="card border-0 shadow-lg rounded-4 feature-card">
                 <div class="card-body p-4 d-flex align-items-center gap-3">
@@ -67,8 +61,7 @@
                         </p>
                     </div>
 
-                    <a href="#"
-                       class="btn btn-warning rounded-pill ms-auto fw-bold text-white btn-sm px-3">
+                    <a href="#" class="btn btn-warning rounded-pill ms-auto fw-bold text-white btn-sm px-3">
                         Start
                     </a>
 
@@ -92,7 +85,7 @@
                     </div>
 
                     <a href="{{ url_for('farmer_community') }}"
-                       class="btn btn-primary rounded-pill ms-auto fw-bold btn-sm px-3">
+                        class="btn btn-primary rounded-pill ms-auto fw-bold btn-sm px-3">
                         View
                     </a>
 
@@ -102,7 +95,7 @@
 
     </div>
 
-    <!-- Diagnostics Header -->
+    
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h4 class="fw-bold m-0">Field Diagnostics</h4>
         <span class="text-muted small d-flex align-items-center">
@@ -111,10 +104,8 @@
         </span>
     </div>
 
-    <!-- Diagnostic Cards -->
-    <div class="row g-4 mb-4">
 
-        <!-- Crop Advisory -->
+    <div class="row g-4 mb-4">
         <div class="col-md-6 col-lg-4">
             <div class="card p-4 bg-green-subtle feature-card rounded-4 border-0">
                 <div class="card-body text-center">
@@ -130,7 +121,7 @@
                     </p>
 
                     <a href="{{ url_for('crop_prediction') }}"
-                       class="btn btn-light bg-white text-success fw-bold rounded-pill w-100 btn-hover-scale shadow-sm">
+                        class="btn btn-light bg-white text-success fw-bold rounded-pill w-100 btn-hover-scale shadow-sm">
                         Open Tool <i data-lucide="arrow-right" width="16"></i>
                     </a>
 
@@ -138,7 +129,7 @@
             </div>
         </div>
 
-        <!-- Nitrogen -->
+
         <div class="col-md-6 col-lg-4">
             <div class="card p-4 bg-yellow-subtle feature-card rounded-4 border-0">
                 <div class="card-body text-center">
@@ -162,7 +153,7 @@
             </div>
         </div>
 
-        <!-- Soil Moisture -->
+
         <div class="col-md-6 col-lg-4">
             <div class="card p-4 bg-blue-subtle feature-card rounded-4 border-0">
                 <div class="card-body text-center">
@@ -186,8 +177,74 @@
             </div>
         </div>
 
-        <!-- Remaining cards (Pest, Weed, Yield) stay exactly same logic-wise -->
+        <div class="col-md-6 col-lg-4">
+            <div class="card p-4 bg-orange-subtle feature-card rounded-4 border-0">
+                <div class="card-body text-center">
 
+                    <div class="bg-warning text-white rounded-3 p-3 d-inline-flex mb-4 shadow-sm">
+                        <i data-lucide="bug" width="32" height="32"></i>
+                    </div>
+
+                    <h4 class="fw-bold mb-3">Pest Severity</h4>
+
+                    <p class="text-secondary mb-4 small">
+                        Track pest intensity and take timely preventive action.
+                    </p>
+
+                    <button
+                        class="btn btn-light bg-white text-warning fw-bold rounded-pill w-100 btn-hover-scale shadow-sm">
+                        Add Log <i data-lucide="plus" width="16"></i>
+                    </button>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card p-4 bg-green-subtle feature-card rounded-4 border-0">
+                <div class="card-body text-center">
+
+                    <div class="bg-success text-white rounded-3 p-3 d-inline-flex mb-4 shadow-sm">
+                        <i data-lucide="leaf" width="32" height="32"></i>
+                    </div>
+
+                    <h4 class="fw-bold mb-3">Weed Percentage</h4>
+
+                    <p class="text-secondary mb-4 small">
+                        Monitor weed growth to protect crop nutrients.
+                    </p>
+
+                    <button
+                        class="btn btn-light bg-white text-success fw-bold rounded-pill w-100 btn-hover-scale shadow-sm">
+                        Add Log <i data-lucide="plus" width="16"></i>
+                    </button>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-4">
+            <div class="card p-4 bg-yellow-subtle feature-card rounded-4 border-0">
+                <div class="card-body text-center">
+
+                    <div class="bg-warning text-dark rounded-3 p-3 d-inline-flex mb-4 shadow-sm">
+                        <i data-lucide="calendar-check" width="32" height="32"></i>
+                    </div>
+
+                    <h4 class="fw-bold mb-3">Today's Observation</h4>
+
+                    <p class="text-secondary mb-4 small">
+                        Log crop condition for today's field visit.
+                    </p>
+
+                    <button
+                        class="btn btn-light bg-white text-warning fw-bold rounded-pill w-100 btn-hover-scale shadow-sm">
+                        Add Entry <i data-lucide="plus" width="16"></i>
+                    </button>
+
+                </div>
+            </div>
+        </div>
     </div>
 </main>
 
