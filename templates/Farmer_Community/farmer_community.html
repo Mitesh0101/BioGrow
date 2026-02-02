@@ -1,6 +1,9 @@
+<!-- TO Use Navbar from base.html(Parent layout) -->
 {% extends "base.html" %}
 
-{% block title %}BioGrow — Farmer Community{% endblock %}
+{% block title %}
+BioGrow — Farmer Community
+{% endblock %}
 
 {% block css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/farmer_community_style.css') }}">
@@ -227,6 +230,8 @@
         </div>
     </div>
 </main>
+
+{% endblock %}
 
 {% block js %}
 <script>
