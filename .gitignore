@@ -11,6 +11,12 @@ venv/
 # VS Code
 .vscode/
 
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+
 # Logs
 *.log
 
