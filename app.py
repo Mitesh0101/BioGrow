@@ -11,14 +11,16 @@ from models import User,Otp
 # To Secure Password
 from werkzeug.security import generate_password_hash, check_password_hash
 
-# Import chatbot blueprint
+# Import Blueprints
 from chatbot import chatbot_bp
+from crop_prediction import crop_prediction_bp
 
 # app → your website
 app = Flask(__name__)
 
-# Add chatbot blueprint
+# Add Blueprints
 app.register_blueprint(chatbot_bp)
+app.register_blueprint(crop_prediction_bp)
 
 # Connect Flask app with database
 app.config.from_object(Config)
@@ -66,11 +68,6 @@ def dashboard():
         return redirect(url_for("login"))
     # If logged in then show dashboard
     return render_template("Dashboard/dashboard.html")
-
-
-@app.route("/crop_prediction")
-def crop_prediction():
-    return render_template("Crop_Prediction/crop_prediction.html")
 
 
 @app.route("/farmer_community")
