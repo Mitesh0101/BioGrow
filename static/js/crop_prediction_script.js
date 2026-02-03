@@ -1,3 +1,5 @@
+lucide.createIcons()
+
 function predictCrop(event) {
     event.preventDefault();
 
