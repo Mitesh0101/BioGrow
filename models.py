@@ -1,4 +1,5 @@
 from extensions import db
+from datetime import datetime,timezone,timedelta
 
 class User(db.Model):
     __tablename__ = "users"
@@ -17,3 +18,19 @@ class User(db.Model):
 
     created_at = db.Column(db.DateTime)
 
+class Otp(db.Model):
+    __tablename__ = "otp"
+
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False
+    )
+
+    otp_code = db.Column(db.String(6), nullable=False)
+    expires_at = db.Column(db.DateTime, nullable=False)
+    is_used = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime,default=lambda: datetime.now(timezone.utc))
+
+    

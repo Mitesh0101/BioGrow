@@ -1,14 +1,12 @@
-from flask import Flask, redirect, request, url_for, Response, render_template,session
-
+import random
+from flask import Flask, redirect, request, url_for, render_template,session
 # Config means database config (username, password, db name)
 from config import Config
-
 # db is SQLAlchemy database object
 from extensions import db
-from datetime import datetime
-
+from datetime import datetime,timedelta,timezone
 # User is table imported from models
-from models import User
+from models import User,Otp
 
 # To Secure Password
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -103,11 +101,25 @@ def register():
             location=location,
             dob=dob,
             mobile=mobile,
+            is_verified=False,
             created_at=datetime.now()
         )
 
-        # Add User in db table
+        # 1. Add User in db table
         db.session.add(user)
+        db.session.commit()
+
+        # 2. Generate OTP
+        otp_code = str(random.randint(100000, 999999))
+        
+        # 3. Insert OTP
+        otp = Otp(
+            user_id=user.user_id,
+            otp_code=otp_code,
+            expires_at=datetime.now(timezone.utc) + timedelta(minutes=10)
+        )
+
+        db.session.add(otp)
         db.session.commit()
         
         return redirect(url_for("login"))

@@ -40,7 +40,7 @@
                             </button>
                         </div>
 
-                        <form id="form-login"  method="POST" action="{{ url_for('login') }}">
+                        <form id="form-login" method="POST" action="{{ url_for('login') }}">
                             <label for="login-email" class="form-label small fw-bold text-secondary">Email</label>
 
                             <div class="input-group">
@@ -78,16 +78,20 @@
                         <form id="form-register" action="{{ url_for('register') }}" method="POST" class="d-none">
                             <div class="row g-3">
                                 <div class="col-12">
-                                    <label for="reg-username" class="form-label small fw-bold text-secondary">Full
-                                        Name</label>
+                                    <label for="reg-fullname" class="form-label small fw-bold text-secondary">
+                                        Full Name
+                                    </label>
                                     <div class="input-group">
                                         <span class="input-group-text bg-light border-end-0 text-secondary">
                                             <i data-lucide="user" width="18"></i>
                                         </span>
                                         <input type="text" class="form-control bg-light border-start-1 ps-1"
-                                            id="reg-username" name="full_name" placeholder="Enter your full name"
-                                            required>
+                                            id="reg-fullname" oninput="validateFullname();checkRegisterForm()" onchange="validateFullname();checkRegisterForm()" name="full_name"
+                                            placeholder="Enter your full name" required>
                                     </div>
+                                    <small id="err-fullname" class="text-danger d-none">
+                                        Username must be at least 3 characters
+                                    </small>
                                 </div>
 
                                 <div class="col-12">
@@ -99,8 +103,11 @@
                                         </span>
                                         <input type="email" name="email" id="reg-email"
                                             class="form-control bg-light border-start-1 ps-1"
-                                            placeholder="you@example.com" required>
+                                            placeholder="you@example.com" onchange="validateEmail();checkRegisterForm()" oninput="validateEmail();checkRegisterForm()" required>
                                     </div>
+                                    <small id="err-email" class="text-danger d-none">
+                                        Enter a valid email address
+                                    </small>
                                 </div>
 
                                 <div class="col-12">
@@ -111,8 +118,28 @@
                                             <i data-lucide="lock" width="18"></i>
                                         </span>
                                         <input type="password" class="form-control bg-light border-start-1 ps-1"
-                                            name="password" id="reg-password" placeholder="Create a password" required>
+                                            name="password" id="reg-password" placeholder="Create a password"
+                                            onchange="validatePassword();checkRegisterForm()" oninput="validatePassword();checkRegisterForm()" required>
                                     </div>
+                                    <small id="err-password" class="text-danger d-none">
+                                        Password must be at least 6 characters and must contain atleast 1 letter and 1 digit
+                                    </small>
+                                </div>
+
+                                <div class="col-12">
+                                    <label for="reg-confirm" class="form-label small fw-bold text-secondary">Confirm
+                                        Password</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-light border-end-0 text-secondary">
+                                            <i data-lucide="lock" width="18"></i>
+                                        </span>
+                                        <input type="password" class="form-control bg-light border-start-1 ps-1"
+                                            name="password" id="reg-confirm" placeholder="Confirm password"
+                                            onchange="validateConfirmPassword();checkRegisterForm()" oninput="validateConfirmPassword();checkRegisterForm()" required>
+                                    </div>
+                                    <small id="err-confirm" class="text-danger d-none">
+                                        Passwords do not match
+                                    </small>
                                 </div>
 
                                 <div class="col-12">
@@ -124,8 +151,11 @@
                                         </span>
                                         <input type="text" class="form-control bg-light border-start-1 ps-1"
                                             name="location" id="reg-location" placeholder="Enter your city or village"
-                                            required>
+                                            onchange="validateLocation();checkRegisterForm()" oninput="validateLocation();checkRegisterForm()" required>
                                     </div>
+                                    <small id="err-location" class="text-danger d-none">
+                                        Please Provide Valid Location
+                                    </small>
                                 </div>
 
 
@@ -137,8 +167,11 @@
                                             <i data-lucide="calendar" width="18"></i>
                                         </span>
                                         <input type="date" class="form-control bg-light border-start-1 ps-1" name="dob"
-                                            id="reg-dob" required>
+                                            id="reg-dob" onchange="validateDOB();checkRegisterForm()" oninput="validateDOB();checkRegisterForm()" required>                        
                                     </div>
+                                    <small id="err-dob" class="text-danger d-none">
+                                        You must be at least 13 years old
+                                    </small>
                                 </div>
 
                                 <div class="col-md-6">
@@ -150,23 +183,23 @@
                                         </span>
                                         <input type="tel" class="form-control bg-light border-start-1 ps-1"
                                             name="mobile" maxlength="10" id="reg-mobile" placeholder="9876543210"
-                                            required>
+                                            onchange="validateMobile();checkRegisterForm()" oninput="validateMobile();checkRegisterForm()" required>
                                     </div>
+                                    <small id="err-mobile" class="text-danger d-none">Enter a 10-digit mobile number</small>
                                 </div>
 
                                 <div class="col-12 mt-4">
-                                    <button type="submit"
+                                    <button type="submit" disabled id="registerBtn" 
                                         class="btn btn-success w-100 py-2 rounded-pill fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2">
                                         Create Account <i data-lucide="user-plus" width="18"></i>
                                     </button>
                                 </div>
                             </div>
                         </form>
-
                     </div>
                     <div class="card-footer bg-light text-center py-3 border-0">
                         <small class="text-secondary">
-                            By continuing, you agree to BioGrow's
+                            By continuing, you agree to BioGrow's   
                             <a href="#" class="text-success text-decoration-none">Terms</a> &
                             <a href="#" class="text-success text-decoration-none">Privacy Policy</a>
                         </small>
