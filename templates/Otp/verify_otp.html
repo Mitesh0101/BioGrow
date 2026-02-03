@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OTP Verification</title>
+</head>
+<body>
+
+    <h3>Verify OTP</h3>
+
+    {% if error %}
+        <p style="color:red;">{{ error }}</p>
+    {% endif %}
+
+    <form method="POST">
+        <input type="text" name="otp" placeholder="Enter 6-digit OTP" required>
+        <button type="submit">Verify</button>
+    </form>
+
+    <br>
+
+    <a href="{{ url_for('resend_otp', user_id=user_id) }}">
+        Resend OTP
+    </a>
+
+</body>
+</html>

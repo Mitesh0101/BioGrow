@@ -12,10 +12,9 @@ class User(db.Model):
     points = db.Column(db.Integer)
     badge = db.Column(db.String(50))
     location = db.Column(db.String(100))
-
     dob = db.Column(db.Date)         
     mobile = db.Column(db.String(15))
-
+    is_verified = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime)
 
 class Otp(db.Model):
@@ -24,7 +23,7 @@ class Otp(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(
         db.Integer,
-        db.ForeignKey("users.id", ondelete="CASCADE"),
+        db.ForeignKey("users.user_id", ondelete="CASCADE"),
         nullable=False
     )
 
