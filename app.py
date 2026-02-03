@@ -11,8 +11,14 @@ from models import User,Otp
 # To Secure Password
 from werkzeug.security import generate_password_hash, check_password_hash
 
+# Import chatbot blueprint
+from chatbot import chatbot_bp
+
 # app → your website
 app = Flask(__name__)
+
+# Add chatbot blueprint
+app.register_blueprint(chatbot_bp)
 
 # Connect Flask app with database
 app.config.from_object(Config)
@@ -124,7 +130,6 @@ def register():
         
         return redirect(url_for("login"))
     return render_template("Login/login.html")
-
 
 if __name__ == "__main__":
     app.run(debug=True)
