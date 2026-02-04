@@ -101,8 +101,6 @@ async function predictCrop(event) {
         soil_type: soil.value
     }
 
-    // const crop = getPrediction(formData);
-
     const response = await fetch("/api/predict-crop", {
         method: "POST",
         headers: {"Content-Type": "application/json"},
@@ -110,56 +108,53 @@ async function predictCrop(event) {
     });
 
     const data = await response.json();
-
-    // return data.result;
-
-
-    // let cropData = null;
-
-    // if (temp >= 25 && rainfall < 700 && p > 50) {
-    //     cropData = {
-    //         name: "Cotton",
-    //         match: 86.3,
-    //         fertilizer: "NPK 19:19:19 @ 25kg/acre + Urea @ 50kg/acre",
-    //         season: "October - November",
-    //         yield: "45-50 quintals/acre",
-    //         water: "Moderate",
-    //         price: "₹2,100/quintal"
-    //     };
-    // }
-    // else if (rainfall > 800 && ph >= 6 && ph <= 7.5) {
-    //     cropData = {
-    //         name: "Rice",
-    //         match: 89.1,
-    //         fertilizer: "DAP @ 50kg/acre + Urea @ 40kg/acre",
-    //         season: "June - July",
-    //         yield: "50-60 quintals/acre",
-    //         water: "High",
-    //         price: "₹2,300/quintal"
-    //     };
-    // }
-    // else {
-    //     cropData = {
-    //         name: "Wheat",
-    //         match: 82.4,
-    //         fertilizer: "Urea @ 45kg/acre + SSP @ 30kg/acre",
-    //         season: "November - December",
-    //         yield: "40-45 quintals/acre",
-    //         water: "Low",
-    //         price: "₹2,050/quintal"
-    //     };
-    // }
-
-    document.getElementById("cropName").innerText = data.result;
-    // document.getElementById("matchText").innerText = cropData.match + "% Match";
-    // document.getElementById("matchBar").style.width = cropData.match + "%";
-    // document.getElementById("fertilizer").innerText = cropData.fertilizer;
-    // document.getElementById("season").innerText = cropData.season;
-    // document.getElementById("yield").innerText = cropData.yield;
-    // document.getElementById("water").innerText = cropData.water;
-    // document.getElementById("price").innerText = cropData.price;
-
-    document.getElementById("result-before").classList.add("d-none");
-    document.getElementById("result-after").classList.remove("d-none");
-
+    if (!response.ok || data.error) {
+        document.getElementById("errorMessage").innerText = data.error || "Unknown Error Occured";
+        document.getElementById("result-before").classList.remove("d-none");
+        document.getElementById("result-after").classList.add("d-none");
+    }
+    else {
+        document.getElementById("cropName").innerText = data.result;
+        const fertList = document.getElementById("fertilizerList");
+        if (fertList) {
+            fertList.innerHTML = ""; // Clear old recommendations
+            
+            // Loop through the list that Python backend sent
+            data.recommendations.forEach(rec => {
+                const li = document.createElement("li");
+                li.innerText = rec;
+                li.classList.add("list-group-item", "d-flex", "justify-content-between", "align-items-center");
+                
+                // We convert text to lowercase to safely check keywords
+                const lowerRec = rec.toLowerCase();
+                if (lowerRec.includes("optimal")) {
+                    // Green for good news
+                    li.classList.add("list-group-item-success");
+                    li.innerHTML += ' <span class="badge bg-success rounded-pill">✔ Good</span>';
+                } 
+                else if (lowerRec.includes("low")) {
+                    // Red for "Action Required" (Low nutrients)
+                    li.classList.add("list-group-item-danger");
+                    li.innerHTML += ' <span class="badge bg-danger rounded-pill">⚠ Low</span>';
+                } 
+                else if (lowerRec.includes("high")) {
+                    // Yellow for "Warning" (High nutrients)
+                    li.classList.add("list-group-item-warning");
+                    li.innerHTML += ' <span class="badge bg-warning text-dark rounded-pill">! High</span>';
+                }
+                
+                fertList.appendChild(li);
+            });
+        }
+        // document.getElementById("matchText").innerText = cropData.match + "% Match";
+        // document.getElementById("matchBar").style.width = cropData.match + "%";
+        // document.getElementById("fertilizer").innerText = cropData.fertilizer;
+        // document.getElementById("season").innerText = cropData.season;
+        // document.getElementById("yield").innerText = cropData.yield;
+        // document.getElementById("water").innerText = cropData.water;
+        // document.getElementById("price").innerText = cropData.price;
+    
+        document.getElementById("result-before").classList.add("d-none");
+        document.getElementById("result-after").classList.remove("d-none");
+    }
 }
