@@ -25,9 +25,6 @@ mail.init_app(app)
 
 
 from models import User,Otp,Topic
-# ================= IMPORT & REGISTER BLUEPRINTS =================
-from chatbot import chatbot_bp
-app.register_blueprint(chatbot_bp)
 
 # ================= EMAIL FUNCTION =================
 def send_otp_email(to_email, otp):
@@ -79,6 +76,7 @@ def dashboard():
     user = User.query.get(session["user_id"])
     if not user.is_verified:
         return redirect(url_for("verify_otp", user_id=user.user_id))
+    return render_template("Dashboard/dashboard.html")
 
 
 @app.route("/logout")
