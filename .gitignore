@@ -5,6 +5,8 @@ __pycache__/
 # Virtual environment
 venv/
 
+crop_app.pkl
+
 # Environment variables
 .env
 

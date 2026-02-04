@@ -5,10 +5,19 @@ from flask import Flask, redirect, request, url_for, render_template, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_mail import Message
 
+# Import Blueprints
+from chatbot import chatbot_bp
+from crop_prediction import crop_prediction_bp
 from config import Config
 from extensions import db, mail
 
 app = Flask(__name__)
+
+# Add Blueprints
+app.register_blueprint(chatbot_bp)
+app.register_blueprint(crop_prediction_bp)
+
+# Connect Flask app with database
 app.config.from_object(Config)
 
 db.init_app(app)
@@ -70,8 +79,6 @@ def dashboard():
     user = User.query.get(session["user_id"])
     if not user.is_verified:
         return redirect(url_for("verify_otp", user_id=user.user_id))
-
-    return render_template("Dashboard/dashboard.html")
 
 
 @app.route("/logout")
@@ -190,11 +197,6 @@ def register():
         return redirect(url_for("verify_otp", user_id=user.user_id))
 
     return render_template("Login/login.html")
-
-
-@app.route("/crop_prediction")
-def crop_prediction():
-    return render_template("Crop_Prediction/crop_prediction.html")
 
 
 @app.route("/farmer_community", methods=["GET", "POST"])
