@@ -59,5 +59,3 @@ Return STRICT JSON:
             "confidence": 0,
             "reason": f"AI Error: {str(e)}"
         })
-
-print(validate_answer_with_ai("My crops have potato blight", "Drink Pure Acid and Burn everything"))
