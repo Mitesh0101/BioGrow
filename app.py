@@ -6,8 +6,11 @@ from datetime import datetime, timedelta
 from models import User, Otp
 from flask_mail import Message
 from werkzeug.security import generate_password_hash, check_password_hash
+from chatbot import chatbot_bp
 
 app = Flask(__name__)
+
+app.register_blueprint(chatbot_bp)
 
 # App config
 app.config.from_object(Config)
@@ -96,7 +99,6 @@ def verify_otp(user_id):
                 user_id=user_id
             )
 
-        # ✅ FIXED datetime comparison
         if otp_record.expires_at < datetime.utcnow():
             return render_template(
                 "Otp/verify_otp.html",
