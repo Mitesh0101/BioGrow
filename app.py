@@ -1,21 +1,24 @@
 import random
+from datetime import datetime, timedelta
+
 from flask import Flask, redirect, request, url_for, render_template, session
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_mail import Message
+
 from config import Config
 from extensions import db, mail
-from datetime import datetime, timedelta
-from models import User, Otp
-from flask_mail import Message
-from werkzeug.security import generate_password_hash, check_password_hash
-from chatbot import chatbot_bp
 
 app = Flask(__name__)
-
-app.register_blueprint(chatbot_bp)
-
-# App config
 app.config.from_object(Config)
+
 db.init_app(app)
 mail.init_app(app)
+
+
+from models import User,Otp,Topic
+# ================= IMPORT & REGISTER BLUEPRINTS =================
+from chatbot import chatbot_bp
+app.register_blueprint(chatbot_bp)
 
 # ================= EMAIL FUNCTION =================
 def send_otp_email(to_email, otp):
@@ -24,7 +27,6 @@ def send_otp_email(to_email, otp):
         sender=("BioGrow", app.config["MAIL_USERNAME"]),
         recipients=[to_email]
     )
-
     msg.body = f"""
 Your BioGrow OTP is: {otp}
 
@@ -34,7 +36,6 @@ Do not share this OTP with anyone.
     mail.send(msg)
 
 # ================= ROUTES =================
-
 @app.route("/")
 def home():
     return render_template("HomePage/home_page.html")
@@ -67,7 +68,6 @@ def dashboard():
         return redirect(url_for("login"))
 
     user = User.query.get(session["user_id"])
-
     if not user.is_verified:
         return redirect(url_for("verify_otp", user_id=user.user_id))
 
@@ -111,7 +111,6 @@ def verify_otp(user_id):
         user.is_verified = True
 
         db.session.commit()
-
         return redirect(url_for("login"))
 
     return render_template("Otp/verify_otp.html", user_id=user_id)
@@ -128,12 +127,10 @@ def resend_otp(user_id):
     if user.is_verified:
         return redirect(url_for("login"))
 
-    # Invalidate old OTPs
     Otp.query.filter_by(user_id=user_id, is_used=False).update(
         {"is_used": True}
     )
 
-    # Generate new OTP
     new_otp = str(random.randint(100000, 999999))
 
     otp = Otp(
@@ -146,7 +143,6 @@ def resend_otp(user_id):
     db.session.commit()
 
     send_otp_email(user.email, new_otp)
-
     return redirect(url_for("verify_otp", user_id=user_id))
 
 
@@ -158,8 +154,7 @@ def register():
         email = request.form.get("email")
         password = request.form.get("password")
         location = request.form.get("location")
-        dob_str = request.form.get("dob")
-        dob = datetime.strptime(dob_str, "%Y-%m-%d").date()
+        dob = datetime.strptime(request.form.get("dob"), "%Y-%m-%d").date()
         mobile = request.form.get("mobile")
 
         if User.query.filter_by(email=email).first():
@@ -170,7 +165,6 @@ def register():
             email=email,
             password_hash=generate_password_hash(password),
             role="FARMER",
-            badge="Beginner",
             points=0,
             location=location,
             dob=dob,
@@ -183,7 +177,6 @@ def register():
         db.session.commit()
 
         otp_code = str(random.randint(100000, 999999))
-
         otp = Otp(
             user_id=user.user_id,
             otp_code=otp_code,
@@ -194,19 +187,41 @@ def register():
         db.session.commit()
 
         send_otp_email(user.email, otp_code)
-
         return redirect(url_for("verify_otp", user_id=user.user_id))
 
     return render_template("Login/login.html")
+
 
 @app.route("/crop_prediction")
 def crop_prediction():
     return render_template("Crop_Prediction/crop_prediction.html")
 
 
-@app.route("/farmer_community")
+@app.route("/farmer_community", methods=["GET", "POST"])
 def farmer_community():
-    return render_template("Farmer_Community/farmer_community.html")
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    if request.method == "POST":
+        topic = Topic(
+            user_id=session["user_id"],
+            title=request.form.get("title"),
+            description=request.form.get("description"),
+            category=request.form.get("category")
+        )
+        db.session.add(topic)
+        db.session.commit()
+        return redirect(url_for("farmer_community"))
+
+    topics = Topic.query.order_by(
+        Topic.is_pinned.desc(),
+        Topic.created_at.desc()
+    ).all()
+
+    return render_template(
+        "Farmer_Community/farmer_community.html",
+        topics=topics
+    )
 
 
 @app.route("/profile")
