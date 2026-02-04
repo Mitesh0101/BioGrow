@@ -1,25 +1,37 @@
 import os
-from groq import Groq
+from chatbot import client
 import json
-client = Groq(api_key=os.getenv("GROQ_API_KEY"),base_url="https://api.groq.com")
 
 def validate_answer_with_ai(question, answer):
     prompt = f"""
-You are an agriculture expert.
+You are a strict Agricultural Quality Assurance Auditor. 
+Your job is to evaluate if an AI response provides a detailed, actionable, and agronomic solution to a farmer.
 
-Question:
-{question}
+Input Data:
+----------------
+Question: {question}
+Answer: {answer}
+----------------
 
-Answer:
-{answer}
+Strict Evaluation Criteria:
+1. **Specificity:** The answer MUST name specific inputs (e.g., "Urea", "Imidacloprid") or specific actions (e.g., "install drip irrigation", "spray every 15 days"). 
+2. **Actionability:** Vague advice like "solve it", "use fertilizer", "take care of crops", or "consult an expert" is FAILURE.
+3. **Length & Depth:** One-line or two-word answers are automatically considered unhelpful.
 
-Decide if the answer is reasonably helpful and relevant to question.
+Scoring Guide:
+- **0-40 (Critical Fail):** Gibberish, "Solve it", "Yes/No", or generic advice like "Use water."
+- **41-70 (Weak):** Correct topic but lacks details (e.g., "Use nitrogen" without saying which fertilizer).
+- **71-100 (Pass):** Specific, expert advice with chemical names, quantities, or methods.
 
-Return STRICT JSON in this format:
+Output Requirements:
+- Set "is_valid" to true ONLY if confidence is above 75.
+- "reason" must explicitly state what specific detail was missing if the score is low.
+
+Return STRICT JSON:
 {{
-  "is_valid": true/false,
-  "confidence": number (0-100),
-  "reason": "short explanation"
+  "is_valid": boolean,
+  "confidence": number, 
+  "reason": "string"
 }}
 """
 
@@ -47,3 +59,5 @@ Return STRICT JSON in this format:
             "confidence": 0,
             "reason": f"AI Error: {str(e)}"
         })
+
+print(validate_answer_with_ai("My crops have potato blight", "Drink Pure Acid and Burn everything"))
