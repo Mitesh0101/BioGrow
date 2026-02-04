@@ -34,7 +34,7 @@ class Otp(db.Model):
 
 class Topic(db.Model):
     __tablename__ = "topics"
-
+    
     topic_id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"))
     title = db.Column(db.String(200), nullable=False)
@@ -45,3 +45,27 @@ class Topic(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
     user = db.relationship("User", backref="topics")
+
+class Answer(db.Model):
+    __tablename__ = "answers"
+
+    answer_id = db.Column(db.Integer, primary_key=True)
+
+    topic_id = db.Column(
+        db.Integer,
+        db.ForeignKey("topics.topic_id", ondelete="CASCADE"),
+        nullable=False
+    )
+
+    user_id = db.Column(
+        db.Integer,
+        db.ForeignKey("users.user_id", ondelete="CASCADE"),
+        nullable=False
+    )
+
+    answer_text = db.Column(db.Text, nullable=False)
+    is_best_solution = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    user = db.relationship("User")
+    topic = db.relationship("Topic", backref="answers")

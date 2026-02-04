@@ -9,7 +9,7 @@ chatbot_bp = Blueprint("chatbot", __name__, template_folder="templates", static_
 
 # Initialize client once
 client = OpenAI(
-    api_key=os.getenv("api_key"),
+    api_key=os.getenv("API_KEY"),
     base_url="https://api.groq.com/openai/v1",
 )
 

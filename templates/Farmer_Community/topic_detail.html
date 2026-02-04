@@ -1,0 +1,91 @@
+<!-- Use base.html as parent -->
+{% extends "base.html" %}
+
+{% block title %}
+{{ topic.title }} — BioGrow Community
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/farmer_community_style.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="container py-4">
+
+    <!-- ================= QUESTION CARD ================= -->
+    <div class="card mb-4 border-0 shadow-sm">
+        <div class="card-body">
+
+            <h3 class="fw-bold mb-2">{{ topic.title }}</h3>
+
+            <p class="text-muted mb-3">
+                Asked by <strong>{{ topic.user.full_name }}</strong>
+                • {{ topic.created_at.strftime("%d %b %Y • %I:%M %p") }}
+            </p>
+
+            <p>{{ topic.description }}</p>
+
+            {% if topic.category %}
+                <span class="badge bg-light text-dark">{{ topic.category }}</span>
+            {% endif %}
+
+        </div>
+    </div>
+
+    <!-- ================= ANSWERS SECTION ================= -->
+    <h5 class="fw-bold mb-3">Answers</h5>
+
+    {% for answer in topic.answers %}
+    <div class="card mb-3 border-0 {% if answer.is_best_solution %}border border-success{% endif %}">
+        <div class="card-body">
+
+            <p>{{ answer.answer_text }}</p>
+
+            <small class="text-muted">
+                Answered by {{ answer.user.full_name }}
+                • {{ answer.created_at.strftime("%d %b %Y • %I:%M %p") }}
+            </small>
+
+            {% if answer.is_best_solution %}
+                <span class="badge bg-success ms-2">Best Answer</span>
+            {% endif %}
+
+            <!-- MARK AS BEST BUTTON -->
+            {% if session.user_id == topic.user_id and not answer.is_best_solution %}
+            <div class="mt-2">
+                <a href="{{ url_for('mark_best_answer', answer_id=answer.answer_id) }}"
+                   class="btn btn-sm btn-outline-success">
+                    Mark as Best
+                </a>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+    {% else %}
+        <p class="text-muted">No answers yet. Be the first to help!</p>
+    {% endfor %}
+
+    <!-- ================= ADD ANSWER FORM ================= -->
+    <div class="card mt-4 border-0 shadow-sm">
+        <div class="card-body">
+            <h5 class="fw-bold mb-3">Your Answer</h5>
+
+            <form method="POST">
+                <textarea name="answer_text"
+                          class="form-control mb-3"
+                          rows="4"
+                          placeholder="Write your answer here..."
+                          required></textarea>
+
+                <button type="submit" class="btn btn-primary">
+                    Submit Answer
+                </button>
+            </form>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

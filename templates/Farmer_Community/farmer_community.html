@@ -73,8 +73,10 @@ BioGrow — Farmer Community
                             {% endif %}
                         </div>
 
-                        <h3 class="h6 fw-bold mt-3 mb-2">
-                            {{ topic.title }}
+                        <h3>
+                            <a href="{{ url_for('view_topic', topic_id=topic.topic_id) }}" class="fw-bold text-decoration-none">
+                                {{ topic.title }}
+                            </a>
                         </h3>
 
                         <p class="text-muted mb-2">

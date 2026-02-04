@@ -1,30 +1,41 @@
 import random
+import json
 from datetime import datetime, timedelta
 
 from flask import Flask, redirect, request, url_for, render_template, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_mail import Message
+from dotenv import load_dotenv
 
-# Import Blueprints
-from chatbot import chatbot_bp
-from crop_prediction import crop_prediction_bp
+# ================= ENV =================
+load_dotenv()
+
+# ================= CONFIG & EXTENSIONS =================
 from config import Config
 from extensions import db, mail
 
+# ================= APP INIT =================
 app = Flask(__name__)
-
-# Add Blueprints
-app.register_blueprint(chatbot_bp)
-app.register_blueprint(crop_prediction_bp)
-
-# Connect Flask app with database
 app.config.from_object(Config)
 
 db.init_app(app)
 mail.init_app(app)
 
+# ================= MODELS =================
+from models import User, Otp, Topic, Answer
 
-from models import User,Otp,Topic
+with app.app_context():
+    db.create_all()
+
+# ================= BLUEPRINTS =================
+from chatbot import chatbot_bp
+from crop_prediction import crop_prediction_bp
+
+app.register_blueprint(chatbot_bp)
+app.register_blueprint(crop_prediction_bp)
+
+# ================= AI VALIDATOR =================
+from utils.answer_validator import validate_answer_with_ai
 
 # ================= EMAIL FUNCTION =================
 def send_otp_email(to_email, otp):
@@ -46,7 +57,7 @@ Do not share this OTP with anyone.
 def home():
     return render_template("HomePage/home_page.html")
 
-
+# ---------------- LOGIN ----------------
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -67,7 +78,7 @@ def login():
 
     return render_template("Login/login.html")
 
-
+# ---------------- DASHBOARD ----------------
 @app.route("/dashboard")
 def dashboard():
     if "user_id" not in session:
@@ -76,16 +87,16 @@ def dashboard():
     user = User.query.get(session["user_id"])
     if not user.is_verified:
         return redirect(url_for("verify_otp", user_id=user.user_id))
+
     return render_template("Dashboard/dashboard.html")
 
-
+# ---------------- LOGOUT ----------------
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect(url_for("login"))
 
-
-# ================= OTP VERIFY =================
+# ---------------- OTP VERIFY ----------------
 @app.route("/verify-otp/<int:user_id>", methods=["GET", "POST"])
 def verify_otp(user_id):
     if request.method == "POST":
@@ -120,8 +131,7 @@ def verify_otp(user_id):
 
     return render_template("Otp/verify_otp.html", user_id=user_id)
 
-
-# ================= RESEND OTP =================
+# ---------------- RESEND OTP ----------------
 @app.route("/resend-otp/<int:user_id>")
 def resend_otp(user_id):
     user = User.query.get(user_id)
@@ -137,7 +147,6 @@ def resend_otp(user_id):
     )
 
     new_otp = str(random.randint(100000, 999999))
-
     otp = Otp(
         user_id=user_id,
         otp_code=new_otp,
@@ -150,33 +159,25 @@ def resend_otp(user_id):
     send_otp_email(user.email, new_otp)
     return redirect(url_for("verify_otp", user_id=user_id))
 
-
-# ================= REGISTER =================
+# ---------------- REGISTER ----------------
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
-        full_name = request.form.get("full_name")
-        email = request.form.get("email")
-        password = request.form.get("password")
-        location = request.form.get("location")
-        dob = datetime.strptime(request.form.get("dob"), "%Y-%m-%d").date()
-        mobile = request.form.get("mobile")
-
-        if User.query.filter_by(email=email).first():
-            return "Email already registered"
-
         user = User(
-            full_name=full_name,
-            email=email,
-            password_hash=generate_password_hash(password),
+            full_name=request.form.get("full_name"),
+            email=request.form.get("email"),
+            password_hash=generate_password_hash(request.form.get("password")),
             role="FARMER",
             points=0,
-            location=location,
-            dob=dob,
-            mobile=mobile,
+            location=request.form.get("location"),
+            dob=datetime.strptime(request.form.get("dob"), "%Y-%m-%d").date(),
+            mobile=request.form.get("mobile"),
             is_verified=False,
             created_at=datetime.utcnow()
         )
+
+        if User.query.filter_by(email=user.email).first():
+            return "Email already registered"
 
         db.session.add(user)
         db.session.commit()
@@ -196,7 +197,7 @@ def register():
 
     return render_template("Login/login.html")
 
-
+# ---------------- FARMER COMMUNITY ----------------
 @app.route("/farmer_community", methods=["GET", "POST"])
 def farmer_community():
     if "user_id" not in session:
@@ -218,16 +219,74 @@ def farmer_community():
         Topic.created_at.desc()
     ).all()
 
-    return render_template(
-        "Farmer_Community/farmer_community.html",
-        topics=topics
-    )
+    return render_template("Farmer_Community/farmer_community.html", topics=topics)
 
+# ---------------- VIEW TOPIC ----------------
+@app.route("/topic/<int:topic_id>", methods=["GET", "POST"])
+def view_topic(topic_id):
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    topic = Topic.query.get_or_404(topic_id)
+
+    if request.method == "POST":
+        answer = Answer(
+            topic_id=topic_id,
+            user_id=session["user_id"],
+            answer_text=request.form.get("answer_text")
+        )
+        db.session.add(answer)
+        db.session.commit()
+        return redirect(url_for("view_topic", topic_id=topic_id))
+
+    return render_template("Farmer_Community/topic_detail.html", topic=topic)
+
+# ---------------- MARK BEST ANSWER (AI SAFE) ----------------
+@app.route("/mark-best/<int:answer_id>")
+def mark_best_answer(answer_id):
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    answer = Answer.query.get_or_404(answer_id)
+    topic = db.session.get(Topic,answer.topic_id)
+
+    if topic.user_id != session["user_id"]:
+        return "Unauthorized", 403
+
+    # 🔥 SAFE AI CALL
+    try:
+        ai_response = validate_answer_with_ai(
+            topic.title + ". " + topic.description,
+            answer.answer_text
+        )
+        ai_result = json.loads(ai_response)
+    except Exception as e:
+        print("AI ERROR:", e)
+        ai_result = {
+            "is_valid": True,
+            "confidence": 50,
+            "reason": "AI unavailable – fallback approval"
+        }
+
+    if ai_result["is_valid"] and ai_result["confidence"] >= 60:
+        Answer.query.filter_by(
+            topic_id=topic.topic_id,
+            is_best_solution=True
+        ).update({"is_best_solution": False})
+
+        answer.is_best_solution = True
+        db.session.commit()
+        return redirect(url_for("view_topic", topic_id=topic.topic_id))
+
+    return f"AI rejected answer: {ai_result['reason']}"
 
 @app.route("/profile")
 def profile():
-    return render_template("Profile/profile.html")
-
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+    
+    user = User.query.get(session["user_id"])
+    return render_template("Profile/profile.html",user=user)
 
 # ================= RUN =================
 if __name__ == "__main__":
