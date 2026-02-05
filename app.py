@@ -30,9 +30,11 @@ with app.app_context():
 # ================= BLUEPRINTS =================
 from chatbot import chatbot_bp
 from crop_prediction import crop_prediction_bp
+from crop_tracking import crop_tracking_bp
 
 app.register_blueprint(chatbot_bp)
 app.register_blueprint(crop_prediction_bp)
+app.register_blueprint(crop_tracking_bp)
 
 # ================= AI VALIDATOR =================
 from utils.answer_validator import validate_answer_with_ai

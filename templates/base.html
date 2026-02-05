@@ -40,6 +40,11 @@
                 </li>
 
                 <li class="nav-item">
+                    <a class="nav-link fw-semibold {% if request.endpoint=='crop_tracking.crop_tracking' %} active fw-bold{% endif %}"
+                       href="{{ url_for('crop_tracking.crop_tracking') }}">Crop Tracking</a>
+                </li>
+
+                <li class="nav-item">
                     <a class="nav-link fw-semibold {% if request.endpoint=='farmer_community' %} active fw-bold{% endif %}"
                        href="{{ url_for('farmer_community') }}">Community</a>
                 </li>
