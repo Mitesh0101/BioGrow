@@ -13,7 +13,7 @@ class User(db.Model):
     badge = db.Column(db.String(50),nullable=False, default="Beginner")
     location = db.Column(db.String(100))
     dob = db.Column(db.Date)
-    mobile = db.Column(db.String(15))
+    mobile = db.Column(db.String(10))
     is_verified = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime)
 
@@ -24,13 +24,15 @@ class Otp(db.Model):
     user_id = db.Column(
         db.Integer,
         db.ForeignKey("users.user_id", ondelete="CASCADE"),
-        nullable=False
+        nullable=False,
     )
 
     otp_code = db.Column(db.String(6), nullable=False)
     expires_at = db.Column(db.DateTime, nullable=False)
     is_used = db.Column(db.Boolean, default=False)
-    created_at = db.Column(db.DateTime,default=lambda: datetime.now(timezone.utc))
+    # if we dont write lambda then when it run for first time it will take right value but when the second data is inserted after long time then also it will give same default value of time as before
+    created_at = db.Column(db.DateTime,default=lambda:datetime.now(timezone.utc))
+    # utc is worlds standard reference time
 
 class Topic(db.Model):
     __tablename__ = "topics"
@@ -42,7 +44,7 @@ class Topic(db.Model):
     category = db.Column(db.String(50))
     is_pinned = db.Column(db.Boolean, default=False)
     pinned_until = db.Column(db.DateTime)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime,default=lambda: datetime.now(timezone.utc))
 
     user = db.relationship("User", backref="topics")
 

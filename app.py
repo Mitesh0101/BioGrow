@@ -273,7 +273,6 @@ def mark_best_answer(answer_id):
             topic_id=topic.topic_id,
             is_best_solution=True
         ).update({"is_best_solution": False})
-
         answer.is_best_solution = True
         db.session.commit()
         return redirect(url_for("view_topic", topic_id=topic.topic_id))
