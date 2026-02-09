@@ -28,7 +28,7 @@ def crop_standards(user_crop_id):
 @crop_tracking_bp.route("/log_field_data/<int:user_crop_id>", methods=["POST"])
 def log_field_data(user_crop_id):
     data = request.get_json()
-    if not data:
+    if not any(data.values()):
         return jsonify({"alerts": ["No input data provided"]}), 400
     user_crop = UserCrop.query.get_or_404(user_crop_id)
     crop_log = CropLog.query.filter_by(user_crop_id=user_crop_id, log_date=date.today()).first()
@@ -38,11 +38,11 @@ def log_field_data(user_crop_id):
             log_date=date.today(),
             # (date.today() - user_crop.sowing_date) gives timedelta object
             week_number=int((date.today() - user_crop.sowing_date).days / 7) + 1,
-            soil_moisture=data.get("moisture"),
-            plant_height_cm=data.get("height"),
-            lcc_score=data.get("lcc"),
-            phenology_stage=data.get("stage"),
-            stand_count=data.get("stand_count")
+            soil_moisture=data["moisture"] if data["moisture"] else None,
+            plant_height_cm=data["height"] if data["height"] else None,
+            lcc_score=data["lcc"] if data["lcc"] else None,
+            phenology_stage=data["stage"] if data["stage"] else None,
+            stand_count=data["stand_count"] if data["stand_count"] else None
         )
         db.session.add(crop_log)
     else:
