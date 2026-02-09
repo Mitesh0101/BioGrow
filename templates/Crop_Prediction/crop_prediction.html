@@ -32,37 +32,43 @@ Smart Crop Recommendation | BioGrow
 
                     <div class="mb-2">
                         <label class="form-label">Nitrogen (N) - kg/hectare</label>
-                        <input type="number" id="nitrogen" name="nitrogen" class="form-control" min="0" max="300" required>
+                        <input type="number" id="nitrogen" name="nitrogen" class="form-control" min="0" max="300"
+                            required placeholder="e.g. 120">
                     </div>
                     <div id="nitrogenError" class="mb-2"></div>
-                    
+
                     <div class="mb-2">
                         <label class="form-label">Phosphorus (P) - kg/hectare</label>
-                        <input type="number" id="phosphorus" name="phosphorus" class="form-control" min="0" max="300" required>
+                        <input type="number" id="phosphorus" name="phosphorus" class="form-control" min="0" max="300"
+                            required placeholder="e.g. 60">
                     </div>
                     <div id="phosphorusError" class="mb-2"></div>
-                    
+
                     <div class="mb-2">
                         <label class="form-label">Potassium (K) - kg/hectare</label>
-                        <input type="number" id="potassium" name="potassium" class="form-control" min="0" max="300" required>
+                        <input type="number" id="potassium" name="potassium" class="form-control" min="0" max="300"
+                            required placeholder="e.g. 80">
                     </div>
                     <div id="potassiumError" class="mb-2"></div>
-                    
+
                     <div class="mb-2">
                         <label class="form-label">Soil pH (pH)</label>
-                        <input type="number" step="0.1" id="ph" name="ph" class="form-control" min="0" max="14" required>
+                        <input type="number" step="0.1" id="ph" name="ph" class="form-control" min="0" max="14" required
+                            placeholder="e.g. 6.5">
                     </div>
                     <div id="phError" class="mb-2"></div>
-                    
+
                     <div class="mb-2">
                         <label class="form-label">Average Humidity (%)</label>
-                        <input type="number" id="humidity" name="humidity" class="form-control" min="0" max="100" required>
+                        <input type="number" id="humidity" name="humidity" class="form-control" min="0" max="100"
+                            required placeholder="e.g. 65">
                     </div>
                     <div id="humidityError" class="mb-2"></div>
-                    
+
                     <div class="mb-2">
                         <label class="form-label">Average Temperature (°C)</label>
-                        <input type="number" id="temperature" name="temperature" class="form-control" min="0" max="60" required>
+                        <input type="number" id="temperature" name="temperature" class="form-control" min="0" max="60"
+                            required placeholder="e.g. 28">
                     </div>
                     <div id="tempError" class="mb-2"></div>
 
@@ -72,7 +78,7 @@ Smart Crop Recommendation | BioGrow
                             <option hidden disabled selected>==Choose Soil Type==</option>
                         </select>
                     </div>
-                    
+
                     <button type="submit" class="btn btn-success w-100">
                         🌾 Get Recommendation
                     </button>
@@ -94,6 +100,20 @@ Smart Crop Recommendation | BioGrow
                     <p id="errorMessage" class="text-center mt-4 text-danger"></p>
                 </div>
 
+                <!-- Loading State -->
+                <div id="result-loading" class="d-none text-center py-5">
+
+                    <div class="spinner-border text-success mb-3" style="width:3rem;height:3rem;" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+
+                    <h5 class="fw-bold">Predicting Best Crop 🌱</h5>
+                    <p class="text-muted small" id="loadingText">
+                        Analyzing soil and climate data…
+                    </p>
+
+                </div>
+
                 <!-- After Prediction -->
                 <div id="result-after" class="d-none">
 
@@ -113,7 +133,7 @@ Smart Crop Recommendation | BioGrow
 
                     <div class="card shadow-sm mb-4 border-0">
                         <div class="card-header bg-success text-white d-flex align-items-center">
-                            <i class="bi bi-droplet-half me-2"></i> 
+                            <i class="bi bi-droplet-half me-2"></i>
                             <h5 class="mb-0">Fertilizer Recommendations</h5>
                         </div>
                         <div class="card-body p-0">

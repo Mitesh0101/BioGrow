@@ -91,6 +91,16 @@ function validateData(field, errorField, featureName, lowerLimit, upperLimit) {
 async function predictCrop(event) {
     event.preventDefault();
 
+    // ----- SHOW LOADING -----
+    document.getElementById("result-before").classList.add("d-none");
+    document.getElementById("result-after").classList.add("d-none");
+    document.getElementById("result-loading").classList.remove("d-none");
+
+    // Disable submit button
+    const submitBtn = event.target.querySelector("button[type='submit']");
+    submitBtn.disabled = true;
+    submitBtn.innerText = "Processing...";
+
     const formData = {
         n: n.value,
         p: p.value,
@@ -109,12 +119,18 @@ async function predictCrop(event) {
 
     const data = await response.json();
     if (!response.ok || data.error) {
-        document.getElementById("errorMessage").innerText = data.error || "Unknown Error Occured";
+        document.getElementById("result-loading").classList.add("d-none");
         document.getElementById("result-before").classList.remove("d-none");
         document.getElementById("result-after").classList.add("d-none");
+        document.getElementById("errorMessage").innerText = data.error || "Unknown Error Occured";
+
+        submitBtn.disabled = false;
+        submitBtn.innerText = "🌾 Get Recommendation"
     }
     else {
+        console.log(data);
         document.getElementById("cropName").innerText = data.result;
+
         const fertList = document.getElementById("fertilizerList");
         if (fertList) {
             fertList.innerHTML = ""; // Clear old recommendations
@@ -146,15 +162,12 @@ async function predictCrop(event) {
                 fertList.appendChild(li);
             });
         }
-        // document.getElementById("matchText").innerText = cropData.match + "% Match";
-        // document.getElementById("matchBar").style.width = cropData.match + "%";
-        // document.getElementById("fertilizer").innerText = cropData.fertilizer;
-        // document.getElementById("season").innerText = cropData.season;
-        // document.getElementById("yield").innerText = cropData.yield;
-        // document.getElementById("water").innerText = cropData.water;
-        // document.getElementById("price").innerText = cropData.price;
     
-        document.getElementById("result-before").classList.add("d-none");
+        document.getElementById("result-loading").classList.add("d-none");
         document.getElementById("result-after").classList.remove("d-none");
+
+        submitBtn.disabled = false;
+        submitBtn.innerText = "🌾 Get Recommendation";
     }
 }
+

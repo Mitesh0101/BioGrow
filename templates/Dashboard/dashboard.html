@@ -106,7 +106,7 @@
 
 
     <div class="row g-4 mb-4">
-        <div class="col-md-6 col-lg-4">
+        <div class="col-md-6">
             <div class="card p-4 bg-green-subtle feature-card rounded-4 border-0">
                 <div class="card-body text-center">
 
@@ -130,7 +130,7 @@
         </div>
 
 
-        <div class="col-md-6 col-lg-4">
+        <div class="col-md-6">
             <div class="card p-4 bg-yellow-subtle feature-card rounded-4 border-0">
                 <div class="card-body text-center">
 
@@ -154,7 +154,7 @@
         </div>
 
 
-        <div class="col-md-6 col-lg-4">
+        <div class="col-md-6">
             <div class="card p-4 bg-blue-subtle feature-card rounded-4 border-0">
                 <div class="card-body text-center">
 
@@ -168,62 +168,17 @@
                         Record "hand-feel" moisture tests to prevent water stress or root rot.
                     </p>
 
-                    <button
+                    <a
+                        href="{{url_for('crop_tracking.crop_tracking')}}"
                         class="btn btn-light bg-white text-primary fw-bold rounded-pill w-100 btn-hover-scale shadow-sm">
                         Add Log <i data-lucide="plus" width="16"></i>
-                    </button>
-
+                    </a>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-6 col-lg-4">
-            <div class="card p-4 bg-orange-subtle feature-card rounded-4 border-0">
-                <div class="card-body text-center">
-
-                    <div class="bg-warning text-white rounded-3 p-3 d-inline-flex mb-4 shadow-sm">
-                        <i data-lucide="bug" width="32" height="32"></i>
-                    </div>
-
-                    <h4 class="fw-bold mb-3">Pest Severity</h4>
-
-                    <p class="text-secondary mb-4 small">
-                        Track pest intensity and take timely preventive action.
-                    </p>
-
-                    <button
-                        class="btn btn-light bg-white text-warning fw-bold rounded-pill w-100 btn-hover-scale shadow-sm">
-                        Add Log <i data-lucide="plus" width="16"></i>
-                    </button>
-
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4">
-            <div class="card p-4 bg-green-subtle feature-card rounded-4 border-0">
-                <div class="card-body text-center">
-
-                    <div class="bg-success text-white rounded-3 p-3 d-inline-flex mb-4 shadow-sm">
-                        <i data-lucide="leaf" width="32" height="32"></i>
-                    </div>
-
-                    <h4 class="fw-bold mb-3">Weed Percentage</h4>
-
-                    <p class="text-secondary mb-4 small">
-                        Monitor weed growth to protect crop nutrients.
-                    </p>
-
-                    <button
-                        class="btn btn-light bg-white text-success fw-bold rounded-pill w-100 btn-hover-scale shadow-sm">
-                        Add Log <i data-lucide="plus" width="16"></i>
-                    </button>
-
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-6 col-lg-4">
+    
+        <div class="col-md-6">
             <div class="card p-4 bg-yellow-subtle feature-card rounded-4 border-0">
                 <div class="card-body text-center">
 
@@ -237,11 +192,10 @@
                         Log crop condition for today's field visit.
                     </p>
 
-                    <button
+                    <a href="{{ url_for('crop_tracking.crop_tracking') }}"
                         class="btn btn-light bg-white text-warning fw-bold rounded-pill w-100 btn-hover-scale shadow-sm">
                         Add Entry <i data-lucide="plus" width="16"></i>
-                    </button>
-
+                    </a>
                 </div>
             </div>
         </div>
