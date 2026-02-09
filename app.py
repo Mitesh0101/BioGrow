@@ -29,9 +29,11 @@ from models import User, Otp,Answer,Topic
 # ================= BLUEPRINTS =================
 from chatbot import chatbot_bp
 from crop_prediction import crop_prediction_bp
+from crop_tracking import crop_tracking_bp
 
 app.register_blueprint(chatbot_bp)
 app.register_blueprint(crop_prediction_bp)
+app.register_blueprint(crop_tracking_bp)
 app.register_blueprint(auth_bp)
 app.register_blueprint(community_bp)
 
