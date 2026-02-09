@@ -41,6 +41,8 @@ app.register_blueprint(community_bp)
 # ================= AI VALIDATOR =================
 from utils.answer_validator import validate_answer_with_ai
 
+from utils.avtar import get_initials
+
 # ================= ROUTES =================
 @app.route("/")
 def home():
@@ -83,6 +85,7 @@ def login():
                 return redirect(url_for("verify_otp", user_id=user.user_id))
             session["user_id"] = user.user_id
             session["full_name"] = user.full_name
+            session["initials"] = get_initials(user.full_name)
             return redirect(url_for("dashboard"))
 
         return "Invalid email or password"
