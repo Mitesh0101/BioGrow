@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Profile Card | BioGrow{% endblock %}
+{% block title %}Profile | BioGrow{% endblock %}
 
 {% block css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/profile_style.css') }}">
@@ -9,14 +9,11 @@
 {% block content %}
 
 <div class="container py-4">
-
-    <!-- mx-auto works when width is fixed and element is block element -->
     <div class="profile-wrapper mx-auto">
 
-        <!-- Profile Header Section -->
+        <!-- Profile Header -->
         <div class="profile-header text-white">
 
-            <!-- User Basic Info -->
             <div class="d-flex align-items-center gap-3">
                 <div class="avatar">
                     <img src="{{ url_for('static', filename='images/farmer.jpg') }}"
@@ -24,83 +21,94 @@
                 </div>
 
                 <div>
-                    <h5 class="mb-0">John Doe</h5>
-                    <span class="mb-0">Farmer • Maharashtra</span>
+                    <h5 class="mb-0">{{ user.full_name }}</h5>
+                    <span class="mb-0">
+                        {{ user.role }} • {{ user.location or "India" }}
+                    </span>
 
-                    <!-- User Stats -->
                     <div class="d-flex gap-2 mt-1">
-                        <span>🏅 1250 Points</span>
-                        <span>⭐ Level 4</span>
+                        <span>🏅 {{ user.points }} Points</span>
+                        <span>⭐ {{ user.badge }}</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Progress Bar Section -->
+            <!-- Progress Bar -->
+            {% set next_badge_points = 2000 %}
+            {% set progress_percent = (user.points / next_badge_points * 100) if user.points < next_badge_points else 100 %}
+
             <div class="mt-2">
                 <div class="d-flex justify-content-between small mb-1">
                     <span>Progress to Expert Badge</span>
-                    <span>1250 / 2000</span>
+                    <span>{{ user.points }} / {{ next_badge_points }}</span>
                 </div>
 
-                <!-- Progress bar shows percentage towards next badge -->
                 <div class="progress progress-sm">
-                    <div class="progress-bar bg-warning" style="width: 62%"></div>
+                    <div class="progress-bar bg-warning"
+                         style="width: {{ progress_percent|round(0) }}%">
+                    </div>
                 </div>
             </div>
 
         </div>
 
-        <!-- Statistics Cards -->
+        <!-- Stats -->
         <div class="row g-3 mt-1">
             <div class="col-4">
                 <div class="stat-card">
-                    <h4>24</h4>
+                    <h4>{{ question_count }}</h4>
                     <small>Questions Asked</small>
                 </div>
             </div>
 
             <div class="col-4">
                 <div class="stat-card">
-                    <h4>42</h4>
+                    <h4>{{ answers_count }}</h4>
                     <small>Answers Given</small>
                 </div>
             </div>
 
             <div class="col-4">
                 <div class="stat-card">
-                    <h4>15</h4>
+                    <h4>{{ best_answers_count }}</h4>
                     <small>Best Answers</small>
                 </div>
             </div>
         </div>
 
-        <!-- Achievements Section -->
+        <!-- Achievements -->
         <div class="section-card mt-3">
             <h6 class="section-title">🏆 Achievements</h6>
 
-            <div class="achievement cream">
+            <div class="achievement cream {% if answers_count < 25 %}locked{% endif %}">
                 <strong>Helper</strong>
-                <span>Earn 25 helpful answers</span>
+                <span>
+                    {% if answers_count >= 25 %}
+                        Unlocked
+                    {% else %}
+                        Locked • Need {{ 25 - answers_count }} more answers
+                    {% endif %}
+                </span>
             </div>
 
-            <div class="achievement blue">
+            <div class="achievement blue {% if user.points < 1000 %}locked{% endif %}">
                 <strong>Rising Star</strong>
-                <span>Earn 1000 points</span>
+                <span>
+                    {% if user.points >= 1000 %}
+                        Unlocked
+                    {% else %}
+                        Locked • Need {{ 1000 - user.points }} points
+                    {% endif %}
+                </span>
             </div>
 
-            <!-- Locked achievements -->
             <div class="achievement locked">
                 <strong>Expert</strong>
                 <span>Locked • Need 2000 points</span>
             </div>
-
-            <div class="achievement locked">
-                <strong>Golden Turban</strong>
-                <span>Locked • Need 5000 points</span>
-            </div>
         </div>
 
-        <!-- Rewards Section -->
+        <!-- Rewards -->
         <div class="section-card mt-3">
             <h6 class="section-title">🎁 Available Rewards</h6>
 
@@ -112,7 +120,7 @@
                 <span class="badge bg-success">100 pts</span>
             </div>
 
-            <div class="reward purple">
+            <div class="reward {% if user.points < 300 %}locked{% endif %}">
                 <div>
                     <strong>Ad-Free Mode (30 days)</strong>
                     <div class="small text-muted">Enjoy distraction-free browsing</div>
@@ -120,21 +128,12 @@
                 <span class="badge bg-primary">300 pts</span>
             </div>
 
-            <div class="reward yellow">
+            <div class="reward {% if user.points < 500 %}locked{% endif %}">
                 <div>
                     <strong>Expert Badge</strong>
                     <div class="small text-muted">Display expert status</div>
                 </div>
                 <span class="badge bg-warning text-dark">500 pts</span>
-            </div>
-
-            <!-- Locked reward -->
-            <div class="reward locked">
-                <div>
-                    <strong>Golden Turban Badge</strong>
-                    <div class="small text-muted">Ultimate recognition</div>
-                </div>
-                <span class="badge bg-secondary">1000 pts</span>
             </div>
         </div>
 
