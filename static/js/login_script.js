@@ -1,4 +1,7 @@
-lucide.createIcons();
+if (window.lucide) {
+    lucide.createIcons();
+}
+
 
 const tabLogin = document.getElementById("tab-login");
 const tabRegister = document.getElementById("tab-register");

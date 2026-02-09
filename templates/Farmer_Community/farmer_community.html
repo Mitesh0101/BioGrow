@@ -39,7 +39,7 @@ BioGrow — Farmer Community
                     <span class="input-group-text bg-white border-0">
                         🔍
                     </span>
-                    <input class="form-control border-0" type="search" placeholder="Search questions">
+                    <input class="form-control border-0" id="searchInput" type="search" placeholder="Search questions">
                 </div>
             </div>
 
@@ -48,10 +48,10 @@ BioGrow — Farmer Community
 
                 <!-- 🔁 DYNAMIC POSTS START -->
                 {% for topic in topics %}
-                <article class="card mb-3 border-0">
+                <article class="card mb-3 border-0 topic-card">
                     <div class="card-body">
 
-                        <div class="d-flex align-items-start justify-content-between">
+                        <div class="d-flex align-items-center justify-content-between">
                             <div class="d-flex gap-3">
                                 <div class="avatar avatar-green">
                                     {{ topic.user.full_name[:2]|upper }}
@@ -67,14 +67,32 @@ BioGrow — Farmer Community
                             </div>
 
                             {% if topic.is_pinned %}
-                                <span class="badge bg-success">Pinned</span>
-                            {% else %}
-                                <span class="badge bg-secondary">Open</span>
+                            <span class="badge bg-warning text-dark">📌 Pinned</span>
+                            {% endif %}
+                            {% if session["user_id"] == topic.user_id %}
+                            <form method="POST" action="{{ url_for('community.pin_topic', topic_id=topic.topic_id) }}"
+                                class="mb-2">
+
+                                <button type="submit" class="btn btn-sm btn-outline-warning" {% if not topic.is_pinned
+                                    and current_user.points < 100 %} disabled
+                                    title="You need at least 100 points to pin this topic" {% endif %} {% if not
+                                    topic.is_pinned %}
+                                    onclick="return confirm('Pinning this topic will cost 100 points. You will have {{ current_user.points - 100 }} points left. Continue?')"
+                                    {% endif %}>
+                                    {% if topic.is_pinned %}
+                                    📌 Unpin
+                                    {% else %}
+                                    📌 Pin (100 pts)
+                                    {% endif %}
+                                </button>
+                            </form>
                             {% endif %}
                         </div>
 
+
                         <h3>
-                            <a href="{{ url_for('view_topic', topic_id=topic.topic_id) }}" class="fw-bold text-decoration-none">
+                            <a href="{{ url_for('community.view_topic', topic_id=topic.topic_id) }}"
+                                class="fw-bold text-decoration-none">
                                 {{ topic.title }}
                             </a>
                         </h3>
@@ -91,21 +109,14 @@ BioGrow — Farmer Community
                         </div>
                         {% endif %}
 
-                        <div class="text-muted">
-                            <button class="btn btn-sm">
-                                👍
-                            </button>
-                            <button class="btn btn-sm">
-                                💬
-                            </button>
-                        </div>
-
                     </div>
                 </article>
                 {% else %}
                 <p class="text-muted">No questions yet. Be the first to ask!</p>
                 {% endfor %}
-                <!-- 🔁 DYNAMIC POSTS END -->
+                <p id="noResults" class="text-muted d-none">
+                    No matching questions found.
+                </p>
 
             </div>
 
@@ -114,15 +125,21 @@ BioGrow — Farmer Community
 
                 <div class="card mb-3 border-0">
                     <div class="card-body leaderboard">
-                        <h6 class="fw-bold mb-3">Top Contributors</h6>
-                        <p class="text-muted">Coming soon</p>
-                    </div>
-                </div>
+                        <h6 class="fw-bold mb-3">🏆 Top Contributors</h6>
 
-                <div class="card border-0">
-                    <div class="card-body">
-                        <h6 class="fw-bold mb-3">Redeem Points</h6>
-                        <p class="text-muted">Feature coming soon</p>
+                        {% for user in top_contributors %}
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                                <strong>{{ user.full_name }}</strong><br>
+                                <small class="text-muted">{{ user.badge }}</small>
+                            </div>
+                            <span class="badge bg-success">
+                                {{ user.lifetime_points }} pts
+                            </span>
+                        </div>
+                        {% else %}
+                        <p class="text-muted">No contributors yet</p>
+                        {% endfor %}
                     </div>
                 </div>
 
@@ -144,12 +161,10 @@ BioGrow — Farmer Community
                 </div>
 
                 <div class="modal-body">
-                    <input type="text" name="title" class="form-control mb-3"
-                           placeholder="Question title" required>
+                    <input type="text" name="title" class="form-control mb-3" placeholder="Question title" required>
 
-                    <textarea name="description" class="form-control mb-3"
-                              rows="4" placeholder="Describe your problem"
-                              required></textarea>
+                    <textarea name="description" class="form-control mb-3" rows="4" placeholder="Describe your problem"
+                        required></textarea>
 
                     <select name="category" class="form-select">
                         <option value="">Select category</option>
@@ -172,5 +187,5 @@ BioGrow — Farmer Community
         </div>
     </div>
 </div>
-
+<script src="{{ url_for('static', filename='js/farmer_community.js') }}"></script>
 {% endblock %}
