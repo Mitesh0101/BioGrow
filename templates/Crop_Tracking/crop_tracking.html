@@ -9,11 +9,17 @@
 {% block content %}
 <div class="container py-5">
     <div class="row mb-4 align-items-center">
-        <div class="col-md-8">
+        <div class="col-md-6">
             <h1 class="fw-bold text-success mb-1">Crop Tracking Log</h1>
             <p class="text-muted">Record field observations to detect growth issues early.</p>
         </div>
-        <div class="col-md-4 text-md-end">
+        <div class="col-md-6 text-md-end">
+            <button id="showLogisticsBtn" class="btn btn-outline-primary rounded-pill me-2 d-none" data-bs-toggle="modal" data-bs-target="#logisticsModal">
+                <i data-lucide="bar-chart-2" width="18"></i> Show Logistics
+            </button>
+            <a href="{{ url_for('crop_tracking.add_farm') }}" class="btn btn-success rounded-pill fw-bold shadow-sm">
+                <i data-lucide="plus" width="16" class="me-1"></i> Add Farm
+            </a>
             <a href="{{ url_for('dashboard') }}" class="btn btn-outline-secondary rounded-pill">
                 <i data-lucide="arrow-left" width="16"></i> Back to Dashboard
             </a>
@@ -62,19 +68,19 @@
                     <div id="collapseDaily" class="accordion-collapse collapse show" data-bs-parent="#logAccordion">
                         <div class="accordion-body">
                             <label class="form-label small fw-bold text-muted">SOIL MOISTURE FEEL</label>
-                            <div class="d-flex gap-2">
+                            <div class="d-flex gap-2" id="moistureBox">
                                 <!-- The radio button itself isn't visible, The label acts like the radio button. -->
-                                <input type="radio" class="btn-check" name="soil_moisture" id="moistureDry" value="Dry">
+                                <input type="radio" class="btn-check" name="moisture" id="moistureDry" value="Dry">
                                 <label class="btn btn-outline-danger flex-grow-1 rounded-3 py-3" for="moistureDry">
                                     <i data-lucide="cloud-off" class="d-block mx-auto mb-1"></i> Dry (Loose)
                                 </label>
 
-                                <input type="radio" class="btn-check" name="soil_moisture" id="moistureMoist" value="Moist">
+                                <input type="radio" class="btn-check" name="moisture" id="moistureMoist" value="Moist">
                                 <label class="btn btn-outline-primary flex-grow-1 rounded-3 py-3" for="moistureMoist">
                                     <i data-lucide="droplets" class="d-block mx-auto mb-1"></i> Moist (Sticky)
                                 </label>
 
-                                <input type="radio" class="btn-check" name="soil_moisture" id="moistureWet" value="Wet">
+                                <input type="radio" class="btn-check" name="moisture" id="moistureWet" value="Wet">
                                 <label class="btn btn-outline-info flex-grow-1 rounded-3 py-3" for="moistureWet">
                                     <i data-lucide="cloud-rain" class="d-block mx-auto mb-1"></i> Wet (Standing)
                                 </label>
@@ -101,13 +107,13 @@
                                     <label class="form-label small fw-bold text-muted">PLANT HEIGHT (CM)</label>
                                     <div class="input-group">
                                         <span class="input-group-text border-end-0"><i data-lucide="arrow-up-circle" width="18"></i></span>
-                                        <input type="number" class="form-control border-start-0 ps-0" name="height" placeholder="e.g. 45.5" step="0.1">
+                                        <input type="number" class="form-control border-start-0 ps-0" id="height" min="0" name="height" placeholder="e.g. 45.5" step="0.1">
                                     </div>
                                 </div>
 
                                 <div class="col-md-6">
                                     <label class="form-label small fw-bold text-muted">LEAF COLOR (LCC 1-6)</label>
-                                    <select class="form-select" name="lcc_score">
+                                    <select class="form-select" name="lcc_score" id="lcc_score">
                                         <option value="" selected>Select Score...</option>
                                         <option value="1">1 - Yellowish Green (Starved)</option>
                                         <option value="2">2 - Pale Green</option>
@@ -120,16 +126,7 @@
 
                                 <div class="col-12">
                                     <label class="form-label small fw-bold text-muted">CURRENT GROWTH STAGE</label>
-                                    <div class="btn-group w-100" role="group">
-                                        <input type="radio" class="btn-check" name="phenology_stage" id="stageVeg" value="Vegetative" autocomplete="off">
-                                        <label class="btn btn-outline-success" for="stageVeg">Vegetative</label>
-
-                                        <input type="radio" class="btn-check" name="phenology_stage" id="stageFlow" value="Flowering" autocomplete="off">
-                                        <label class="btn btn-outline-warning" for="stageFlow">Flowering</label>
-
-                                        <input type="radio" class="btn-check" name="phenology_stage" id="stageMat" value="Maturity" autocomplete="off">
-                                        <label class="btn btn-outline-secondary" for="stageMat">Maturity</label>
-                                    </div>
+                                    <div class="btn-group w-100" id="stageContainer"></div>
                                 </div>
                             </div>
                         </div>
@@ -150,7 +147,7 @@
                     <div id="collapseEst" class="accordion-collapse collapse" data-bs-parent="#logAccordion">
                         <div class="accordion-body bg-light">
                             <label class="form-label small fw-bold text-muted">STAND COUNT (Plants/m²)</label>
-                            <input type="number" class="form-control" name="stand_count" placeholder="Count plants in 1 sq meter">
+                            <input type="number" class="form-control" name="stand_count" id="stand_count" min="0" placeholder="Count plants in 1 sq meter">
                             <div class="form-text">Perform this test only once to check germination success.</div>
                         </div>
                     </div>
@@ -166,6 +163,45 @@
         </form>
 
         <div id="alertArea" class="mt-4"></div>
+    </div>
+</div>
+
+<div class="modal fade" id="logisticsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content rounded-4 border-0 shadow-lg">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fw-bold text-success">Farm Logistics & Trends</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div id="chartsLoader" class="text-center py-5">
+                    <div class="spinner-border text-success">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="text-muted mt-2">Generating analytics...</p>
+                </div>
+
+                <div id="chartsContainer" class="d-none">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <h6 class="fw-bold text-center mb-3">Growth Trajectory</h6>
+                            <img id="heightChartImg" class="img-fluid rounded shadow-sm border" alt="Height Chart">
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="fw-bold text-center mb-3">Phenology Timeline</h6>
+                            <img id="stageChartImg" class="img-fluid rounded shadow-sm border" alt="Stage Chart">
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-light border mt-4 mb-0">
+                        <small class="text-muted">
+                            <i data-lucide="info" width="14" class="me-1"></i>
+                            <strong>Tip:</strong> The dotted green line represents the "Ideal" growth curve standard set by TNAU/ICAR.
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}

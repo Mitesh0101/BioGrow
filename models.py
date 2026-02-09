@@ -1,5 +1,5 @@
 from extensions import db
-from datetime import datetime,timezone
+from datetime import datetime,timezone, date
 from sqlalchemy.dialects.postgresql import JSONB  # Required for the flexible data
 
 class User(db.Model):
@@ -91,7 +91,7 @@ class UserCrop(db.Model):
     sowing_date = db.Column(db.Date, nullable=False)
     area_acres = db.Column(db.Float, default=1.0)
     status = db.Column(db.String(20), default='active') # 'active', 'harvested'
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.now())
 
     standard = db.relationship('CropStandard', backref='farms')
 
@@ -100,7 +100,7 @@ class CropLog(db.Model):
 
     crop_log_id = db.Column(db.Integer, primary_key=True)
     user_crop_id = db.Column(db.Integer, db.ForeignKey('user_crops.user_crop_id', ondelete='CASCADE'), nullable=False)
-    log_date = db.Column(db.Date, default=datetime.utcnow, nullable=False)
+    log_date = db.Column(db.Date, default=date.today(), nullable=False)
     week_number = db.Column(db.Integer, nullable=True) # Calculated in Python before saving
     soil_moisture = db.Column(db.String(20), nullable=True) 
     plant_height_cm = db.Column(db.Float, nullable=True) 
