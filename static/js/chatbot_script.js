@@ -82,3 +82,5 @@ chatSend.addEventListener('click', handleSend);
 chatInput.addEventListener('keypress', (e) => { 
     if (e.key === 'Enter') handleSend(); 
 });
+
+lucide.createIcons();

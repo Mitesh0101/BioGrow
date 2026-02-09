@@ -104,7 +104,13 @@
 
             <div class="achievement locked">
                 <strong>Expert</strong>
-                <span>Locked • Need 2000 points</span>
+                <span>
+                    {% if user.points >= 2000 %}
+                        Unlocked
+                    {% else %}
+                        Locked • Need {{ 2000 - user.points }} points
+                    {% endif %}
+                </span>
             </div>
         </div>
 
@@ -133,7 +139,7 @@
                     <strong>Expert Badge</strong>
                     <div class="small text-muted">Display expert status</div>
                 </div>
-                <span class="badge bg-warning text-dark">500 pts</span>
+                <span class="badge bg-warning text-dark">2000 pts</span>
             </div>
         </div>
 

@@ -17,7 +17,12 @@
     <div class="card mb-4 border-0 shadow-sm">
         <div class="card-body">
 
-            <h3 class="fw-bold mb-2">{{ topic.title }}</h3>
+            <div class="d-flex justify-content-between">
+                <h3 class="fw-bold mb-2">{{ topic.title }}</h3>
+                <a href="{{ url_for('community.farmer_community') }}" class="btn btn-outline-secondary rounded-pill">
+                    <i data-lucide="arrow-left" width="16"></i> Back to Community
+                </a>
+            </div>
 
             <p class="text-muted mb-3">
                 Asked by <strong>{{ topic.user.full_name }}</strong>
