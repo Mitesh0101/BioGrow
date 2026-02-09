@@ -52,7 +52,7 @@ def home():
 # ---------------- LOGIN ----------------
 @app.route("/login", methods=["GET", "POST"])
 def login():
-    now = datetime.utcnow()
+    now = datetime.now()
     if request.method == "POST":
         email = request.form.get("email")
         password = request.form.get("password")
@@ -125,7 +125,7 @@ def logout():
 def verify_otp(user_id):
     if request.method == "POST":
         entered_otp = request.form.get("otp").strip()
-        now = datetime.utcnow()
+        now = datetime.now()
 
         # get latest unused OTP
         otp_record = (
@@ -177,7 +177,7 @@ def resend_otp(user_id):
         {"is_used": True}
     )
 
-    now = datetime.utcnow()
+    now = datetime.now()
     new_otp = str(random.randint(100000, 999999))
     otp = Otp(
         user_id=user_id,
@@ -206,7 +206,7 @@ def register():
             dob=datetime.strptime(request.form.get("dob"), "%Y-%m-%d").date(),
             mobile=request.form.get("mobile"),
             is_verified=False,
-            created_at=datetime.utcnow()
+            created_at=datetime.now()
         )
 
         if User.query.filter_by(email=user.email).first():
@@ -219,7 +219,7 @@ def register():
         otp = Otp(
             user_id=user.user_id,
             otp_code=otp_code,
-            expires_at=datetime.utcnow() + timedelta(minutes=10),
+            expires_at=datetime.now() + timedelta(minutes=10),
             is_used = False
         )
 

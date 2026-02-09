@@ -42,7 +42,7 @@ def award_points(user_id, points, reason):
 
 # ---------------- DAILY BONUS ----------------
 def give_daily_bonus(user_id):
-    today = datetime.utcnow().date()
+    today = datetime.now().date()
 
     already_given = PointTransaction.query.filter(
         PointTransaction.user_id == user_id,
@@ -69,7 +69,7 @@ def farmer_community():
             title=request.form.get("title"),
             description=request.form.get("description"),
             category=request.form.get("category"),
-            created_at=datetime.utcnow(),
+            created_at=datetime.now(),
             is_pinned=False
         )
         db.session.add(topic)
@@ -80,7 +80,7 @@ def farmer_community():
     # 🔁 AUTO UNPIN
     Topic.query.filter(
         Topic.is_pinned == True,
-        Topic.pinned_until < datetime.utcnow()
+        Topic.pinned_until < datetime.now()
     ).update(
         {Topic.is_pinned: False, Topic.pinned_until: None},
         synchronize_session=False
@@ -128,7 +128,7 @@ def view_topic(topic_id):
             topic_id=topic_id,
             user_id=session["user_id"],
             answer_text=request.form.get("answer_text"),
-            created_at=datetime.utcnow()
+            created_at=datetime.now()
         )
         db.session.add(answer)
         db.session.commit()
@@ -300,7 +300,7 @@ def pin_topic(topic_id):
     )
 
     topic.is_pinned = True
-    topic.pinned_until = datetime.utcnow() + timedelta(days=7)
+    topic.pinned_until = datetime.now() + timedelta(days=7)
 
     db.session.commit()
 

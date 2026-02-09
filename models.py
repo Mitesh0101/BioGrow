@@ -20,9 +20,9 @@ class User(db.Model):
     dob = db.Column(db.Date)
     mobile = db.Column(db.String(10))
     is_verified = db.Column(db.Boolean, default=False)
-    lifetime_points = db.Column(db.Integer, default=0, nullable=False) # 🏆 reputation
+    lifetime_points = db.Column(db.Integer, default=0, nullable=False)
 
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.now())
 
 
 # ================= OTP =================
@@ -41,7 +41,7 @@ class Otp(db.Model):
     expires_at = db.Column(db.DateTime, nullable=False)
     is_used = db.Column(db.Boolean, default=False)
 
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.now())
 
 
 # ================= TOPIC =================
@@ -63,7 +63,7 @@ class Topic(db.Model):
     is_pinned = db.Column(db.Boolean, default=False)
     pinned_until = db.Column(db.DateTime)
 
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.now())
 
     user = db.relationship("User", backref="topics")
 
@@ -90,7 +90,7 @@ class Answer(db.Model):
     is_best_solution = db.Column(db.Boolean, default=False)
     has_earned_best_points = db.Column(db.Boolean, default=False)
 
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.now())
 
     user = db.relationship("User")
     topic = db.relationship("Topic", backref="answers")
@@ -114,7 +114,7 @@ class CropStandard(db.Model):
     display_name = db.Column(db.String(100), nullable=False)
     category = db.Column(db.String(50), nullable=False)
     growth_config = db.Column(JSONB, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.now())
 
 class UserCrop(db.Model):
     __tablename__ = 'user_crops'
@@ -165,7 +165,7 @@ class PointTransaction(db.Model):
     transaction_type = db.Column(db.String(20), nullable=False)  # CREDIT / DEBIT
     reason = db.Column(db.String(100))
 
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.now())
 
     user = db.relationship("User", backref="point_transactions")
 
@@ -189,7 +189,7 @@ class AnswerComment(db.Model):
     )
 
     comment_text = db.Column(db.Text, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.now())
 
     user = db.relationship("User")
 
@@ -210,7 +210,7 @@ class AnswerLike(db.Model):
         nullable=False
     )
 
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    created_at = db.Column(db.DateTime, default=datetime.now())
 
     __table_args__ = (
         db.UniqueConstraint("answer_id", "user_id", name="unique_answer_like"),

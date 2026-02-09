@@ -32,7 +32,7 @@ def forgot_password():
         otp = Otp(
             user_id=user.user_id,
             otp_code=generated_otp,
-            expires_at=datetime.utcnow() + timedelta(minutes=10),
+            expires_at=datetime.now() + timedelta(minutes=10),
             is_used=False
         )
 
@@ -51,7 +51,7 @@ def forgot_password():
 def reset_password_otp(user_id):
     if request.method == "POST":
         entered_otp = request.form.get("otp").strip()
-        now = datetime.utcnow()
+        now = datetime.now()
 
         # 🔐 fetch ONLY latest unused OTP
         otp_record = (
