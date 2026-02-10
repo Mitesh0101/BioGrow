@@ -1,7 +1,7 @@
 import random
 from datetime import datetime, timedelta
 
-from flask import Flask, redirect, request, url_for, render_template, session
+from flask import Flask, redirect, request, url_for, render_template, session,flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
 
@@ -88,7 +88,8 @@ def login():
             session["initials"] = get_initials(user.full_name)
             return redirect(url_for("dashboard"))
 
-        return "Invalid email or password"
+        flash("Invalid email or Password","danger")
+        return redirect(url_for('login'))
 
     return render_template("Login/login.html")
 
@@ -106,7 +107,6 @@ def dashboard():
     if not user_record.is_verified:
         return redirect(url_for("verify_otp", user_id=user_record.user_id))
 
-    # 🪙 daily bonus (once per day, abuse-safe)
     give_daily_bonus(user_record.user_id)
 
     return render_template(
@@ -231,6 +231,19 @@ def register():
     
     return render_template("Login/login.html")
 
+BADGE_ORDER = [
+    ("Beginner", 0),
+    ("Contributor", 50),
+    ("Trusted Farmer", 150),
+    ("Expert Farmer", 300),
+]
+
+def get_next_badge_info(lifetime_points):
+    for badge, points in BADGE_ORDER:
+        if lifetime_points < points:
+            return badge, points
+    return "Max Level", None
+
 
 @app.route("/profile")
 def profile():
@@ -244,8 +257,9 @@ def profile():
         user_id=user.user_id,
         is_best_solution=True
     ).count()
+    next_badge, next_badge_points = get_next_badge_info(user.lifetime_points)
 
-    return render_template("Profile/profile.html",user=user,question_count=question_count,answers_count=answers_count,best_answers_count=best_answers_count)
+    return render_template("Profile/profile.html",user=user,question_count=question_count,answers_count=answers_count,best_answers_count=best_answers_count,next_badge=next_badge,next_badge_points=next_badge_points)
 
 # ================= RUN =================
 if __name__ == "__main__":

@@ -197,3 +197,7 @@ function checkRegisterForm() {
         registerBtn.disabled = true;
     }
 }
+
+setTimeout(() => {
+   document.querySelectorAll('.alert').forEach(a => a.remove());
+}, 3000);   

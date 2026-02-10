@@ -39,6 +39,16 @@
                                 Sign Up
                             </button>
                         </div>
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                        {% for category, message in messages %}
+                        <div class="alert alert-{{ category }} mt-2">
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                        {% endwith %}
+
 
                         <form id="form-login" method="POST" action="{{ url_for('login') }}">
                             <label for="login-email" class="form-label small fw-bold text-secondary">Email</label>
@@ -65,7 +75,8 @@
                             </div>
 
                             <div class="d-flex justify-content-end mb-4">
-                                <a href="{{ url_for('auth.forgot_password') }}" class="text-success small fw-semibold forgot-password-link">Forgot
+                                <a href="{{ url_for('auth.forgot_password') }}"
+                                    class="text-success small fw-semibold forgot-password-link">Forgot
                                     Password?</a>
                             </div>
 
@@ -86,7 +97,8 @@
                                             <i data-lucide="user" width="18"></i>
                                         </span>
                                         <input type="text" class="form-control bg-light border-start-1 ps-1"
-                                            id="reg-fullname" oninput="validateFullname();checkRegisterForm()" onchange="validateFullname();checkRegisterForm()" name="full_name"
+                                            id="reg-fullname" oninput="validateFullname();checkRegisterForm()"
+                                            onchange="validateFullname();checkRegisterForm()" name="full_name"
                                             placeholder="Enter your full name" required>
                                     </div>
                                     <small id="err-fullname" class="text-danger d-none">
@@ -103,7 +115,8 @@
                                         </span>
                                         <input type="email" name="email" id="reg-email"
                                             class="form-control bg-light border-start-1 ps-1"
-                                            placeholder="you@example.com" onchange="validateEmail();checkRegisterForm()" oninput="validateEmail();checkRegisterForm()" required>
+                                            placeholder="you@example.com" onchange="validateEmail();checkRegisterForm()"
+                                            oninput="validateEmail();checkRegisterForm()" required>
                                     </div>
                                     <small id="err-email" class="text-danger d-none">
                                         Enter a valid email address
@@ -119,10 +132,12 @@
                                         </span>
                                         <input type="password" class="form-control bg-light border-start-1 ps-1"
                                             name="password" id="reg-password" placeholder="Create a password"
-                                            onchange="validatePassword();checkRegisterForm()" oninput="validatePassword();checkRegisterForm()" required>
+                                            onchange="validatePassword();checkRegisterForm()"
+                                            oninput="validatePassword();checkRegisterForm()" required>
                                     </div>
                                     <small id="err-password" class="text-danger d-none">
-                                        Password must be at least 6 characters and must contain atleast 1 letter and 1 digit
+                                        Password must be at least 6 characters and must contain atleast 1 letter and 1
+                                        digit
                                     </small>
                                 </div>
 
@@ -135,7 +150,8 @@
                                         </span>
                                         <input type="password" class="form-control bg-light border-start-1 ps-1"
                                             name="password" id="reg-confirm" placeholder="Confirm password"
-                                            onchange="validateConfirmPassword();checkRegisterForm()" oninput="validateConfirmPassword();checkRegisterForm()" required>
+                                            onchange="validateConfirmPassword();checkRegisterForm()"
+                                            oninput="validateConfirmPassword();checkRegisterForm()" required>
                                     </div>
                                     <small id="err-confirm" class="text-danger d-none">
                                         Passwords do not match
@@ -151,7 +167,8 @@
                                         </span>
                                         <input type="text" class="form-control bg-light border-start-1 ps-1"
                                             name="location" id="reg-location" placeholder="Enter your city or village"
-                                            onchange="validateLocation();checkRegisterForm()" oninput="validateLocation();checkRegisterForm()" required>
+                                            onchange="validateLocation();checkRegisterForm()"
+                                            oninput="validateLocation();checkRegisterForm()" required>
                                     </div>
                                     <small id="err-location" class="text-danger d-none">
                                         Please Provide Valid Location
@@ -167,7 +184,8 @@
                                             <i data-lucide="calendar" width="18"></i>
                                         </span>
                                         <input type="date" class="form-control bg-light border-start-1 ps-1" name="dob"
-                                            id="reg-dob" onchange="validateDOB();checkRegisterForm()" oninput="validateDOB();checkRegisterForm()" required>                        
+                                            id="reg-dob" onchange="validateDOB();checkRegisterForm()"
+                                            oninput="validateDOB();checkRegisterForm()" required>
                                     </div>
                                     <small id="err-dob" class="text-danger d-none">
                                         You must be at least 13 years old
@@ -183,13 +201,15 @@
                                         </span>
                                         <input type="tel" class="form-control bg-light border-start-1 ps-1"
                                             name="mobile" maxlength="10" id="reg-mobile" placeholder="9876543210"
-                                            onchange="validateMobile();checkRegisterForm()" oninput="validateMobile();checkRegisterForm()" required>
+                                            onchange="validateMobile();checkRegisterForm()"
+                                            oninput="validateMobile();checkRegisterForm()" required>
                                     </div>
-                                    <small id="err-mobile" class="text-danger d-none">Enter a 10-digit mobile number</small>
+                                    <small id="err-mobile" class="text-danger d-none">Enter a 10-digit mobile
+                                        number</small>
                                 </div>
 
                                 <div class="col-12 mt-4">
-                                    <button type="submit" disabled id="registerBtn" 
+                                    <button type="submit" disabled id="registerBtn"
                                         class="btn btn-success w-100 py-2 rounded-pill fw-bold shadow-sm d-flex align-items-center justify-content-center gap-2">
                                         Create Account <i data-lucide="user-plus" width="18"></i>
                                     </button>
@@ -199,7 +219,7 @@
                     </div>
                     <div class="card-footer bg-light text-center py-3 border-0">
                         <small class="text-secondary">
-                            By continuing, you agree to BioGrow's   
+                            By continuing, you agree to BioGrow's
                             <a href="#" class="text-success text-decoration-none">Terms</a> &
                             <a href="#" class="text-success text-decoration-none">Privacy Policy</a>
                         </small>

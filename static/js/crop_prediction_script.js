@@ -1,4 +1,4 @@
-lucide.createIcons()
+lucide.createIcons();
 
 const validSoilTypes = [
     "Alluvial Soil",

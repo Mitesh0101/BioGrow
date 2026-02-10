@@ -18,7 +18,7 @@ def forgot_password():
 
         if not user:
             flash("Email not registered","danger")
-            return render_template(
+            return redirect(
                 "Auth/forgot_password.html"
             )
 
@@ -41,7 +41,6 @@ def forgot_password():
 
         send_otp_email(user.email, generated_otp, user.full_name)
         flash("OTP sent to your email 📧", "info")
-
         return redirect(url_for("auth.reset_password_otp", user_id=user.user_id))
 
     return render_template("Auth/forgot_password.html")

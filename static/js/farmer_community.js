@@ -1,4 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
+    lucide.createIcons();
     const searchInput = document.getElementById("searchInput");
     const topicCards = document.querySelectorAll(".topic-card");
     const noResults = document.getElementById("noResults");
@@ -25,3 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 });
+
+setTimeout(() => {
+   document.querySelectorAll('.alert').forEach(a => a.remove());
+}, 3000);

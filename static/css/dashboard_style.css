@@ -28,7 +28,7 @@ body {
 /* Hero Section Gradient */
 .hero-section {
     background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
-    padding-bottom: 6rem;
+    padding-bottom: 4rem;
 }
 
 /* Weather Card */

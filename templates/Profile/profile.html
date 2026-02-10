@@ -16,8 +16,7 @@
 
             <div class="d-flex align-items-center gap-3">
                 <div class="avatar">
-                    <img src="{{ url_for('static', filename='images/farmer.jpg') }}"
-                         class="w-100 h-100 rounded-circle">
+                    <img src="{{ url_for('static', filename='images/farmer.jpg') }}" class="w-100 h-100 rounded-circle">
                 </div>
 
                 <div>
@@ -27,25 +26,26 @@
                     </span>
 
                     <div class="d-flex gap-2 mt-1">
-                        <span>🏅 {{ user.points }} Points</span>
+                        <span>🏅 {{ user.lifetime_points }} Lifetime Points </span>
                         <span>⭐ {{ user.badge }}</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Progress Bar -->
-            {% set next_badge_points = 2000 %}
-            {% set progress_percent = (user.points / next_badge_points * 100) if user.points < next_badge_points else 100 %}
+            {% if next_badge_points %}
+            {% set progress_percent = (user.lifetime_points / next_badge_points * 100) | round(0) %}
+            {% else %}
+            {% set progress_percent = 100 %}
+            {% endif %}
 
             <div class="mt-2">
                 <div class="d-flex justify-content-between small mb-1">
-                    <span>Progress to Expert Badge</span>
-                    <span>{{ user.points }} / {{ next_badge_points }}</span>
+                    <span>Progress to {{ next_badge }}</span>
+                    <span>{{ user.lifetime_points }} / {{ next_badge_points }}</span>
                 </div>
 
                 <div class="progress progress-sm">
-                    <div class="progress-bar bg-warning"
-                         style="width: {{ progress_percent|round(0) }}%">
+                    <div class="progress-bar bg-warning" style="width: {{ progress_percent|round(0) }}%">
                     </div>
                 </div>
             </div>
@@ -84,27 +84,33 @@
                 <strong>Helper</strong>
                 <span>
                     {% if answers_count >= 25 %}
-                        Unlocked
+                    Unlocked
                     {% else %}
-                        Locked • Need {{ 25 - answers_count }} more answers
+                    Locked • Need {{ 25 - answers_count }} more answers
                     {% endif %}
                 </span>
             </div>
 
-            <div class="achievement blue {% if user.points < 1000 %}locked{% endif %}">
-                <strong>Rising Star</strong>
+            <div class="achievement {% if user.lifetime_points < 300 %}locked{% endif %}">
+                <strong>Expert Farmer</strong>
                 <span>
-                    {% if user.points >= 1000 %}
-                        Unlocked
+                    {% if user.lifetime_points >= 300 %}
+                    Unlocked
                     {% else %}
-                        Locked • Need {{ 1000 - user.points }} points
+                    Locked • Need {{ 300 - user.lifetime_points }} points
                     {% endif %}
                 </span>
             </div>
 
-            <div class="achievement locked">
+            <div class="achievement {% if user.lifetime_points < 300 %}locked{% endif %}">
                 <strong>Expert</strong>
-                <span>Locked • Need 2000 points</span>
+                <span>
+                    {% if user.lifetime_points >= 300 %}
+                    Unlocked
+                    {% else %}
+                    Locked • Need {{ 300 - user.lifetime_points }} points
+                    {% endif %}
+                </span>
             </div>
         </div>
 
@@ -133,7 +139,7 @@
                     <strong>Expert Badge</strong>
                     <div class="small text-muted">Display expert status</div>
                 </div>
-                <span class="badge bg-warning text-dark">500 pts</span>
+                <span class="badge bg-warning text-dark">2000 pts</span>
             </div>
         </div>
 
