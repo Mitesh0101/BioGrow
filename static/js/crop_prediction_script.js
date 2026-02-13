@@ -51,6 +51,7 @@ const temp = document.getElementById("temperature");
 const tempError = document.getElementById("tempError");
 
 const soil = document.getElementById("soil");
+const soilError = document.getElementById("soilError");
 for (let soilType of validSoilTypes) {
     soil.innerHTML += `<option value='${soilType}'>${soilType}</option>`;
 }
@@ -90,6 +91,11 @@ function validateData(field, errorField, featureName, lowerLimit, upperLimit) {
 
 async function predictCrop(event) {
     event.preventDefault();
+
+    if (soil.value=="==Choose Soil Type==") {
+        soilError.innerHTML = `<p class='small text-danger'>Soil type is necessary!</p>`;
+        return;
+    }
 
     // ----- SHOW LOADING -----
     document.getElementById("result-before").classList.add("d-none");

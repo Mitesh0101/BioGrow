@@ -1,6 +1,7 @@
 import random
 from datetime import datetime, timedelta
-
+import os
+import requests
 from flask import Flask, redirect, request, url_for, render_template, session,flash
 from werkzeug.security import generate_password_hash, check_password_hash
 from dotenv import load_dotenv
@@ -86,6 +87,7 @@ def login():
             session["user_id"] = user.user_id
             session["full_name"] = user.full_name
             session["initials"] = get_initials(user.full_name)
+            session["location"] = user.location
             return redirect(url_for("dashboard"))
 
         flash("Invalid email or Password","danger")
@@ -96,22 +98,39 @@ def login():
 # ---------------- DASHBOARD ----------------
 @app.route("/dashboard")
 def dashboard():
-    # user must be logged in
     if "user_id" not in session:
         return redirect(url_for("login"))
 
-    # fetch logged-in user
     user_record = User.query.get(session["user_id"])
 
-    # user must be verified
     if not user_record.is_verified:
         return redirect(url_for("verify_otp", user_id=user_record.user_id))
 
     give_daily_bonus(user_record.user_id)
 
+    
+
+    # 🌤 WEATHER LOGIC
+    api_key = os.getenv("WEATHER_API")
+    city = user_record.location
+
+    weather_data = None
+
+    if api_key and city:
+        url = f"https://api.openweathermap.org/data/2.5/weather?q={city},IN&appid={api_key}&units=metric"
+        response = requests.get(url)
+
+        if response.status_code == 200:
+            data = response.json()
+            weather_data = {
+                "temp": data["main"]["temp"],
+                "description": data["weather"][0]["description"]
+            }
+
     return render_template(
         "Dashboard/dashboard.html",
-        user=user_record
+        user=user_record,
+        weather=weather_data
     )
 
 # ---------------- LOGOUT ----------------
@@ -127,7 +146,6 @@ def verify_otp(user_id):
         entered_otp = request.form.get("otp").strip()
         now = datetime.now()
 
-        # get latest unused OTP
         otp_record = (
             Otp.query
             .filter(
@@ -138,7 +156,6 @@ def verify_otp(user_id):
             .first()
         )
 
-        # 🔴 THIS CHECK WAS MISSING
         if not otp_record or otp_record.otp_code != entered_otp:
             return render_template(
                 "Otp/verify_otp.html",
