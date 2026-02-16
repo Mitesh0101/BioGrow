@@ -27,6 +27,43 @@ body {
     border-radius: 12px;
 }
 
+/* Plump up the container and soften the edges */
 .progress {
-    height: 6px;
+    height: 9px;
+}
+
+/* --- New Prediction Dashboard Styles --- */
+.metric-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+}
+
+.prediction-metric-card {
+    transition: transform 0.2s ease;
+}
+
+/* Move card upwards - Floating Effect */
+.prediction-metric-card:hover {
+    transform: translateY(-4px);
+}
+
+/* Increase icon size */
+.prediction-metric-card:hover .metric-icon {
+    transform: scale(1.1);
+}
+
+/* Upgraded Fertilizer List */
+.fertilizer-custom-list .list-group-item {
+    border-radius: 12px;
+    margin-bottom: 10px;
+    padding: 14px 18px;
+}
+
+.fertilizer-custom-list .list-group-item:last-child {
+    margin-bottom: 0;
 }
