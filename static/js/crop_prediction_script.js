@@ -50,6 +50,8 @@ const humidityError = document.getElementById("humidityError");
 const temp = document.getElementById("temperature");
 const tempError = document.getElementById("tempError");
 
+const downloadPdfBtn = document.getElementById("downloadPdfBtn");
+
 const soil = document.getElementById("soil");
 for (let soilType of validSoilTypes) {
     soil.innerHTML += `<option value='${soilType}'>${soilType}</option>`;
@@ -133,6 +135,7 @@ async function predictCrop(event) {
         document.getElementById("matchBar").style.width = `${data.match_percentage}%`;
         document.getElementById("harvestTime").innerText = `${data.duration[0]} - ${data.duration[1]}`;
         document.getElementById("waterReqText").innerText = `${data.water_req} mm`;
+        downloadPdfBtn.setAttribute("data-report-id", data.report_id);
 
         const fertList = document.getElementById("fertilizerList");
         if (fertList) {
@@ -174,3 +177,13 @@ async function predictCrop(event) {
     }
     lucide.createIcons();
 }
+
+downloadPdfBtn.addEventListener("click", function(event) {
+    const reportId = downloadPdfBtn.getAttribute("data-report-id");
+    if (!reportId) return alert("Please generate a prediction first!");
+    
+    // Triggers a browser navigation to the download route. 
+    // Because the server responds with a 'Content-Disposition: attachment' header, 
+    // the browser aborts the redirect and instead downloads the PDF file natively.
+    window.location.href = `/download_report/${reportId}`;
+});

@@ -215,3 +215,28 @@ class AnswerLike(db.Model):
     __table_args__ = (
         db.UniqueConstraint("answer_id", "user_id", name="unique_answer_like"),
     )
+
+class PredictionReport(db.Model):
+    __tablename__ = "prediction_reports"
+
+    report_id = db.Column(db.Integer(), primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.user_id", ondelete="CASCADE"), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.now())
+    
+    # Inputs
+    n = db.Column(db.Float)
+    p = db.Column(db.Float)
+    k = db.Column(db.Float)
+    ph = db.Column(db.Float)
+    humidity = db.Column(db.Float)
+    temperature = db.Column(db.Float)
+    soil_type = db.Column(db.String(50))
+    
+    # Outputs
+    crop_name = db.Column(db.String(50))
+    match_percentage = db.Column(db.Float)
+    water_req = db.Column(db.String(50))
+    harvest_duration = db.Column(db.String(50))
+    
+    # We store the list of recommendations as a JSON string
+    recommendations_json = db.Column(db.Text)

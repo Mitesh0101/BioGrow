@@ -67,3 +67,19 @@ body {
 .fertilizer-custom-list .list-group-item:last-child {
     margin-bottom: 0;
 }
+
+/* --- PDF Download Button Styles --- */
+.pdf-download-btn {
+    border-radius: 12px;
+    padding: 14px 20px;
+    font-size: 1.05rem;
+    transition: all 0.3s ease-out;
+}
+
+.pdf-download-btn:hover {
+    transform: translateY(-3px);
+}
+
+.pdf-download-btn:active {
+    transform: translateY(0);
+}
