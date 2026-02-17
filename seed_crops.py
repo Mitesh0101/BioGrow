@@ -314,7 +314,7 @@ def seed_database():
             }
         },
         {
-            "name": "gingelly",
+            "name": "gingely",
             "display_name": "Gingelly (Sesame)",
             "category": "Oilseed",
             "growth_config": {
@@ -453,7 +453,7 @@ def seed_database():
             }
         },
         {
-            "name": "cabbage",
+            "name": "Cabbage",
             "display_name": "Cabbage",
             "category": "Vegetable",
             "growth_config": {
@@ -847,7 +847,7 @@ def seed_database():
             }
         },
         {
-            "name": "tapioca",
+            "name": "tapoica",
             "display_name": "Tapioca (Cassava)",
             "category": "Tuber",
             "growth_config": {

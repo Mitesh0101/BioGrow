@@ -50,6 +50,8 @@ const humidityError = document.getElementById("humidityError");
 const temp = document.getElementById("temperature");
 const tempError = document.getElementById("tempError");
 
+const downloadPdfBtn = document.getElementById("downloadPdfBtn");
+
 const soil = document.getElementById("soil");
 const soilError = document.getElementById("soilError");
 for (let soilType of validSoilTypes) {
@@ -134,8 +136,12 @@ async function predictCrop(event) {
         submitBtn.innerText = "🌾 Get Recommendation"
     }
     else {
-        console.log(data);
         document.getElementById("cropName").innerText = data.result;
+        document.getElementById("matchText").innerText = `${data.match_percentage}% Match`;
+        document.getElementById("matchBar").style.width = `${data.match_percentage}%`;
+        document.getElementById("harvestTime").innerText = `${data.duration[0]} - ${data.duration[1]}`;
+        document.getElementById("waterReqText").innerText = `${data.water_req} mm`;
+        downloadPdfBtn.setAttribute("data-report-id", data.report_id);
 
         const fertList = document.getElementById("fertilizerList");
         if (fertList) {
@@ -151,17 +157,17 @@ async function predictCrop(event) {
                 const lowerRec = rec.toLowerCase();
                 if (lowerRec.includes("optimal")) {
                     // Green for good news
-                    li.classList.add("list-group-item-success");
+                    li.classList.add("bg-success-subtle");
                     li.innerHTML += ' <span class="badge bg-success rounded-pill">✔ Good</span>';
                 } 
                 else if (lowerRec.includes("low")) {
                     // Red for "Action Required" (Low nutrients)
-                    li.classList.add("list-group-item-danger");
+                    li.classList.add("bg-danger-subtle");
                     li.innerHTML += ' <span class="badge bg-danger rounded-pill">⚠ Low</span>';
                 } 
                 else if (lowerRec.includes("high")) {
                     // Yellow for "Warning" (High nutrients)
-                    li.classList.add("list-group-item-warning");
+                    li.classList.add("bg-warning-subtle");
                     li.innerHTML += ' <span class="badge bg-warning text-dark rounded-pill">! High</span>';
                 }
                 
@@ -175,5 +181,15 @@ async function predictCrop(event) {
         submitBtn.disabled = false;
         submitBtn.innerText = "🌾 Get Recommendation";
     }
+    lucide.createIcons();
 }
 
+downloadPdfBtn.addEventListener("click", function(event) {
+    const reportId = downloadPdfBtn.getAttribute("data-report-id");
+    if (!reportId) return alert("Please generate a prediction first!");
+    
+    // Triggers a browser navigation to the download route. 
+    // Because the server responds with a 'Content-Disposition: attachment' header, 
+    // the browser aborts the redirect and instead downloads the PDF file natively.
+    window.location.href = `/download_report/${reportId}`;
+});

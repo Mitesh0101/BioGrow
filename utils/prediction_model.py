@@ -5,15 +5,15 @@ import numpy as np
 # Format: 'Crop Name': [Nitrogen (N), Phosphorus (P), Potassium (K)]
 optimal_nutrient_dict = {
         'Cabbage': [124, 80, 100],
-        'Pearl millet': [50, 30, 30],
-        'annual moringa': [101, 50, 50],
-        'ash gourd': [80, 60, 80],
+        'pearl_millet': [50, 30, 30],
+        'annual_moringa': [101, 50, 50],
+        'ash_gourd': [80, 60, 80],
         'beetroot': [79, 50, 50],
         'bengalgram': [50, 30, 30],
         'bhendi': [126, 80, 100],
-        'bitter gourd': [80, 60, 80],
+        'bitter_gourd': [80, 60, 80],
         'blackgram': [30, 30, 30],
-        'bottle gourd': [80, 60, 80],
+        'bottle_gourd': [80, 60, 80],
         'brinjal': [125, 60, 100],
         'capsicum': [124, 60, 100],
         'carrot': [100, 79, 80],
@@ -21,12 +21,12 @@ optimal_nutrient_dict = {
         'cauliflower': [100, 50, 50],
         'chillies': [126, 59, 101],
         'chowchow': [80, 50, 50],
-        'cluster bean': [80, 50, 50],
+        'cluster_bean': [80, 50, 50],
         'cotton': [100, 50, 50],
         'cowpea': [45, 30, 30],
         'cucumber': [80, 50, 50],
-        'elephant foot yam': [80, 50, 50],
-        'french bean': [79, 50, 50],
+        'elephant_foot_yam': [80, 50, 50],
+        'french_bean': [79, 50, 50],
         'gingely': [30, 30, 30],
         'greengram': [30, 30, 30],
         'groundnut': [65, 50, 50],
@@ -42,23 +42,23 @@ optimal_nutrient_dict = {
         'radish': [80, 50, 50],
         'ragi': [35, 25, 25],
         'redgram': [50, 30, 30],
-        'ribbed gourd': [80, 60, 80],
+        'ribbed_gourd': [80, 60, 80],
         'rice': [90, 50, 50],
         'samai': [35, 25, 25],
-        'small onion': [80, 50, 50],
-        'snake gourd': [80, 60, 80],
+        'small_onion': [80, 50, 50],
+        'snake_gourd': [80, 60, 80],
         'sorghum': [70, 50, 50],
         'soyabean': [65, 30, 30],
         'sugarbeet': [125, 70, 70],
         'sugarcane': [175, 80, 135],
         'sunflower': [60, 30, 30],
-        'sweet potato': [100, 50, 50],
+        'sweet_potato': [100, 50, 50],
         'tapoica': [80, 50, 50],
         'thinai': [35, 25, 25],
         'tinda': [80, 50, 50],
         'tomato': [126, 60, 100],
         'varagu': [35, 25, 25],
-        'vegetable cowpea': [79, 50, 50],
+        'vegetable_cowpea': [79, 50, 50],
         'watermelon': [99, 50, 80],
         'wheat': [100, 50, 50],
 }
@@ -112,7 +112,12 @@ def get_prediction(n, p, k, ph, temp, humidity, soil_type):
 
     # 5. Predict
     prediction = model.predict(input_df)
-    return prediction[0]
+
+    # Get probabilities for all classes
+    probabilities = model.predict_proba(input_df)
+    # Grab the highest probability, multiply by 100, and round it
+    match_percentage = round(np.max(probabilities) * 100, 2)
+    return prediction[0], match_percentage
 
 def recommend_fertilizer(crop_name, current_n, current_p, current_k):
     # Normalize input
