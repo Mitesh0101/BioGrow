@@ -4,7 +4,10 @@ const errPassword = document.getElementById("errPassword");
 const errConfirm = document.getElementById("errConfirm");
 const resetBtn = document.getElementById("resetBtn");
 
-const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/;
+// At least 1 letter
+// At least 1 number
+// minimum 6 characters
+const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d).{6,}$/;
 
 function validatePassword() {
     const pwd = newPassword.value.trim();

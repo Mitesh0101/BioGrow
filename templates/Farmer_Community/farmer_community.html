@@ -156,7 +156,7 @@ BioGrow — Farmer Community
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
 
-            <form method="POST">
+            <form method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
                     <h5 class="modal-title">Ask a Question</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -167,6 +167,8 @@ BioGrow — Farmer Community
 
                     <textarea name="description" class="form-control mb-3" rows="4" placeholder="Describe your problem"
                         required></textarea>
+                    
+                    <input type="file" class="form-control" name="image" multiple>
 
                     <select name="category" class="form-select">
                         <option value="">Select category</option>

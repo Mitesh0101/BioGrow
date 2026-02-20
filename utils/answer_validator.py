@@ -48,12 +48,14 @@ Return STRICT JSON:
                     "content": prompt
                 }
             ],
+            # it represents behaviour of ai model -> Very stable focused and factual
             temperature=0.2
         )
 
         return completion.choices[0].message.content
 
     except Exception as e:
+        # json.dumps convert python dictionary to json string
         return json.dumps({
             "is_valid": False,
             "confidence": 0,

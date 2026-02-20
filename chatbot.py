@@ -1,3 +1,4 @@
+# OpenAI is used to talk to AI models in project
 from openai import OpenAI
 import os
 from dotenv import load_dotenv
@@ -7,7 +8,7 @@ load_dotenv()
 
 chatbot_bp = Blueprint("chatbot", __name__, template_folder="templates", static_folder="static")
 
-# Initialize client once
+# Initialize AI client once
 client = OpenAI(
     api_key=os.getenv("API_KEY"),
     base_url="https://api.groq.com/openai/v1",

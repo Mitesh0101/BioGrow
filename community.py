@@ -6,7 +6,7 @@ from sqlalchemy import func
 from flask import flash
 
 from extensions import db
-from models import Topic, Answer, User, PointTransaction , AnswerLike , AnswerComment
+from models import Topic, Answer, User, PointTransaction , AnswerLike , AnswerComment , TopicImage
 from utils.answer_validator import validate_answer_with_ai
 
 community_bp = Blueprint("community", __name__)
@@ -73,16 +73,30 @@ def farmer_community():
             is_pinned=False
         )
         db.session.add(topic)
+        db.session.commit()
+        # To get Image we have to write request.files.get()
+        file = request.files.get("image")
+
+        if file and file.filename != "":
+            filepath = "static/images/"+file.filename
+            # Saves image to static/images/filename
+            file.save(filepath)
+            image = TopicImage(
+                topic_id = topic.topic_id,
+                image_path = "images/"+file.filename
+            )
+            db.session.add(image)
         award_points(session["user_id"], 2, "Created a community topic")
         db.session.commit()
         return redirect(url_for("community.farmer_community"))
 
-    # 🔁 AUTO UNPIN
+    # AUTO UNPIN
     Topic.query.filter(
         Topic.is_pinned == True,
         Topic.pinned_until < datetime.now()
     ).update(
         {Topic.is_pinned: False, Topic.pinned_until: None},
+        # Only Change in database. Do not try to update in session
         synchronize_session=False
     )
     db.session.commit()
@@ -140,6 +154,7 @@ def view_topic(topic_id):
         topic=topic,
         answers=answers
     )
+    
 
 @community_bp.route("/mark-best/<int:answer_id>")
 def mark_best_answer(answer_id):
@@ -161,6 +176,7 @@ def mark_best_answer(answer_id):
 
     # ---------------- AI VALIDATION ----------------
     try:
+        # json.loads() convert json string to python dictionary 
         ai_result = json.loads(
             validate_answer_with_ai(
                 topic.title + ". " + topic.description,
@@ -168,7 +184,7 @@ def mark_best_answer(answer_id):
             )
         )
     except Exception:
-        ai_result = {"is_valid": True, "confidence": 60}
+        ai_result = {"is_valid": False, "confidence": 0}
 
     if not ai_result.get("is_valid") or ai_result.get("confidence", 0) < 60:
         flash("This answer did not meet quality standards.", "warning")
@@ -176,12 +192,15 @@ def mark_best_answer(answer_id):
 
     # ---------------- COPY / SIMILARITY CHECK ----------------
     other_answers = Answer.query.filter(
+        # Get answers that belongs to this topic
         Answer.topic_id == topic.topic_id,
+        # Excluding the current answer
         Answer.answer_id != answer.answer_id
     ).all()
 
     for other in other_answers:
         similarity = SequenceMatcher(
+            # first arguement is is_junk => Do not ignore any characters
             None,
             answer.answer_text.lower().strip(),
             other.answer_text.lower().strip()

@@ -52,7 +52,7 @@ def reset_password_otp(user_id):
         entered_otp = request.form.get("otp").strip()
         now = datetime.now()
 
-        # 🔐 fetch ONLY latest unused OTP
+        # fetch only latest unused OTP
         otp_record = (
             Otp.query
             .filter(
@@ -101,12 +101,13 @@ def reset_password(user_id):
                 error="Passwords do not match",
                 user_id=user_id
             )
-
+        
+        # fetches user and change the password (storing hashed password)
         user = User.query.get(user_id)
         user.password_hash = generate_password_hash(password)
         db.session.commit()
 
-        # cleanup
+        # cleanup of reset_allowed
         session.pop("reset_allowed", None)
 
         flash("Password reset successful! Please login.", "success")

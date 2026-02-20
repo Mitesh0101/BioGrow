@@ -39,6 +39,16 @@
             </p>
 
             <p>{{ topic.description }}</p>
+            <!-- TOPIC IMAGES -->
+            {% if topic.images %}
+            <div class="mt-3">
+                {% for image in topic.images %}
+                    <img src="{{ url_for('static', filename=image.image_path) }}"
+                        class="img-fluid rounded mb-2"
+                        style="max-width: 400px;">
+                {% endfor %}
+            </div>
+            {% endif %}
 
             {% if topic.category %}
             <span class="badge bg-light text-dark">{{ topic.category }}</span>
