@@ -4,14 +4,13 @@
 }
 
 body {
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background-color: #f8f9fa; 
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; 
+    background-color: #f8f9fa; 
 }
 
 /* Hero Section */ 
 .hero-section {
     background: linear-gradient(135deg, var(--primary-green), var(--dark-green)); 
-    position: relative; 
-    overflow: hidden;
 }
 
 /* Button hover */
@@ -21,10 +20,6 @@ body {
 
 .btn-hover-scale:hover {
     transform : scale(1.05);
-}
-
-.animate-fade-up { 
-    animation: fadeUp 0.6s ease-out forwards; 
 }
 
 /* Feature Cards */ 
@@ -66,29 +61,4 @@ body {
 } 
 .rounded-bottom-right-0 { 
     border-bottom-right-radius: 0; 
-}
-
-/* Chatbot Styles */ 
-.chatbot-btn { 
-    transition: transform 0.2s; 
-} 
-.chatbot-btn:hover { 
-    transform: scale(1.1); 
-} 
-.chatbot-btn:active { 
-    transform: scale(0.95); 
-}
-.chatbot-window {
-    animation : slideUp 0.3s ease-out;
-}
-
-@keyframes slideUp { 
-    from { 
-        opacity: 0; 
-        transform: translateY(20px) scale(0.95); 
-    } 
-    to { 
-        opacity: 1; 
-        transform: translateY(0) scale(1); 
-    } 
 }

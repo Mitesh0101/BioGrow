@@ -1,5 +1,5 @@
 from extensions import db
-from datetime import datetime,timezone, date
+from datetime import datetime, date
 from sqlalchemy.dialects.postgresql import JSONB  # Required for the flexible data
 
 
@@ -22,7 +22,7 @@ class User(db.Model):
     is_verified = db.Column(db.Boolean, default=False)
     lifetime_points = db.Column(db.Integer, default=0, nullable=False)
 
-    created_at = db.Column(db.DateTime, default=datetime.now())
+    created_at = db.Column(db.DateTime, default=datetime.now)
 
 
 # ================= OTP =================
@@ -31,6 +31,7 @@ class Otp(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
 
+    # if user is deleted then otp will also be deleted
     user_id = db.Column(
         db.Integer,
         db.ForeignKey("users.user_id", ondelete="CASCADE"),
@@ -41,7 +42,7 @@ class Otp(db.Model):
     expires_at = db.Column(db.DateTime, nullable=False)
     is_used = db.Column(db.Boolean, default=False)
 
-    created_at = db.Column(db.DateTime, default=datetime.now())
+    created_at = db.Column(db.DateTime, default=datetime.now)
 
 
 # ================= TOPIC =================
@@ -50,10 +51,18 @@ class Topic(db.Model):
 
     topic_id = db.Column(db.Integer, primary_key=True)
 
+    # If a user is deleted → their OTPs are automatically deleted.
     user_id = db.Column(
         db.Integer,
         db.ForeignKey("users.user_id", ondelete="CASCADE"),
         nullable=False
+    )
+
+    images = db.relationship(
+        "TopicImage",
+        backref = "topic",
+        cascade = "all,delete-orphan",
+        lazy=True
     )
 
     title = db.Column(db.String(200), nullable=False)
@@ -63,8 +72,8 @@ class Topic(db.Model):
     is_pinned = db.Column(db.Boolean, default=False)
     pinned_until = db.Column(db.DateTime)
 
-    created_at = db.Column(db.DateTime, default=datetime.now())
-
+    created_at = db.Column(db.DateTime, default=datetime.now)
+    # used backref so that we can use directly user.topics and get all topics posted by user
     user = db.relationship("User", backref="topics")
 
 
@@ -90,17 +99,20 @@ class Answer(db.Model):
     is_best_solution = db.Column(db.Boolean, default=False)
     has_earned_best_points = db.Column(db.Boolean, default=False)
 
-    created_at = db.Column(db.DateTime, default=datetime.now())
+    created_at = db.Column(db.DateTime, default=datetime.now)
 
     user = db.relationship("User")
+    # backref = "answers" so that we can use topic.answers to get all answers of that topic
     topic = db.relationship("Topic", backref="answers")
     
+    # If answer is deleted all comments are deleted
     comments = db.relationship(
         "AnswerComment",
         order_by="AnswerComment.created_at.asc()",
         cascade="all, delete-orphan"
     )
 
+    # if answer is deleted all likes are deleted
     likes = db.relationship(
         "AnswerLike",
         cascade="all, delete-orphan"
@@ -114,7 +126,7 @@ class CropStandard(db.Model):
     display_name = db.Column(db.String(100), nullable=False)
     category = db.Column(db.String(50), nullable=False)
     growth_config = db.Column(JSONB, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.now())
+    created_at = db.Column(db.DateTime, default=datetime.now)
 
 class UserCrop(db.Model):
     __tablename__ = 'user_crops'
@@ -126,8 +138,8 @@ class UserCrop(db.Model):
     sowing_date = db.Column(db.Date, nullable=False)
     area_acres = db.Column(db.Float, default=1.0)
     status = db.Column(db.String(20), default='active') # 'active', 'harvested'
-    created_at = db.Column(db.DateTime, default=datetime.now())
-
+    created_at = db.Column(db.DateTime, default=datetime.now)
+    
     standard = db.relationship('CropStandard', backref='farms')
 
 class CropLog(db.Model):
@@ -165,8 +177,8 @@ class PointTransaction(db.Model):
     transaction_type = db.Column(db.String(20), nullable=False)  # CREDIT / DEBIT
     reason = db.Column(db.String(100))
 
-    created_at = db.Column(db.DateTime, default=datetime.now())
-
+    created_at = db.Column(db.DateTime, default=datetime.now)
+    # we can use user.point_transactions to get all the transactions of that particular user (returns list)
     user = db.relationship("User", backref="point_transactions")
 
 
@@ -189,7 +201,7 @@ class AnswerComment(db.Model):
     )
 
     comment_text = db.Column(db.Text, nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.now())
+    created_at = db.Column(db.DateTime, default=datetime.now)
 
     user = db.relationship("User")
 
@@ -210,8 +222,9 @@ class AnswerLike(db.Model):
         nullable=False
     )
 
-    created_at = db.Column(db.DateTime, default=datetime.now())
+    created_at = db.Column(db.DateTime, default=datetime.now)
 
+    # This is used so that one user can not give multiple likes to same answer
     __table_args__ = (
         db.UniqueConstraint("answer_id", "user_id", name="unique_answer_like"),
     )
@@ -221,7 +234,7 @@ class PredictionReport(db.Model):
 
     report_id = db.Column(db.Integer(), primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey("users.user_id", ondelete="CASCADE"), nullable=False)
-    created_at = db.Column(db.DateTime, default=datetime.now())
+    created_at = db.Column(db.DateTime, default=datetime.now)
     
     # Inputs
     n = db.Column(db.Float)
@@ -240,3 +253,22 @@ class PredictionReport(db.Model):
     
     # We store the list of recommendations as a JSON string
     recommendations_json = db.Column(db.Text)
+
+
+class TopicImage(db.Model):
+    __tablename__="topic_images"
+    
+    image_id = db.Column(db.Integer,primary_key = True)
+    
+    topic_id = db.Column(
+        db.Integer,
+        db.ForeignKey("topics.topic_id",ondelete="CASCADE"),
+        nullable = False
+    )
+
+    image_path = db.Column(db.Text,nullable = False)
+
+    created_at = db.Column(
+        db.DateTime,
+        default = datetime.now
+    )
