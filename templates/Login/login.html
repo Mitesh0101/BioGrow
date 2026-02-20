@@ -30,6 +30,8 @@
                         </div>
 
                         <div class="p-1 bg-light rounded-pill d-flex mb-4 position-relative border">
+                            <!-- flex-fill tells the buttons to take up all available space -->
+                            <!-- Since both buttons have flex-fill they will split the available space evenly -->
                             <button id="tab-login"
                                 class="btn btn-sm flex-fill rounded-pill fw-bold transition-all active-tab">
                                 Login
@@ -39,6 +41,7 @@
                                 Sign Up
                             </button>
                         </div>
+                        
                         {% with messages = get_flashed_messages(with_categories=true) %}
                         {% if messages %}
                         {% for category, message in messages %}
@@ -49,18 +52,18 @@
                         {% endif %}
                         {% endwith %}
 
-
                         <form id="form-login" method="POST" action="{{ url_for('login') }}">
-                            <label for="login-email" class="form-label small fw-bold text-secondary">Email</label>
-
-                            <div class="input-group">
-                                <span class="input-group-text bg-light border-end-0 text-secondary">
-                                    <i data-lucide="mail" width="18"></i>
-                                </span>
-                                <input type="email" class="form-control bg-light border-start-1 ps-1" id="login-email"
-                                    name="email" placeholder="Enter your email" required>
+                            <div class="mb-2">
+                                <label for="login-email" 
+                                    class="form-label small fw-bold text-secondary">Email</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light border-end-0 text-secondary">
+                                        <i data-lucide="mail" width="18"></i>
+                                    </span>
+                                    <input type="email" class="form-control ps-1" id="login-email"
+                                        name="email" placeholder="Enter your email" required>
+                                </div>
                             </div>
-
 
                             <div class="mb-2">
                                 <label for="login-password"
@@ -69,8 +72,11 @@
                                     <span class="input-group-text bg-light border-end-0 text-secondary">
                                         <i data-lucide="lock" width="18"></i>
                                     </span>
-                                    <input type="password" class="form-control bg-light border-start-1 ps-1"
+                                    <input type="password" class="form-control ps-1"
                                         id="login-password" name="password" placeholder="Enter password" required>
+                                    <button type="button" class="input-group-text bg-light text-secondary" id="toggleLoginPasswordBtn">
+                                        <i data-lucide="eye" width="18"></i>
+                                    </button>
                                 </div>
                             </div>
 
@@ -96,9 +102,8 @@
                                         <span class="input-group-text bg-light border-end-0 text-secondary">
                                             <i data-lucide="user" width="18"></i>
                                         </span>
-                                        <input type="text" class="form-control bg-light border-start-1 ps-1"
-                                            id="reg-fullname" oninput="validateFullname();checkRegisterForm()"
-                                            onchange="validateFullname();checkRegisterForm()" name="full_name"
+                                        <input type="text" class="form-control bg-light ps-1"
+                                            id="reg-fullname" onchange="validateFullname();checkRegisterForm()" name="full_name"
                                             placeholder="Enter your full name" required>
                                     </div>
                                     <small id="err-fullname" class="text-danger d-none">
@@ -114,9 +119,8 @@
                                             <i data-lucide="mail" width="18"></i>
                                         </span>
                                         <input type="email" name="email" id="reg-email"
-                                            class="form-control bg-light border-start-1 ps-1"
-                                            placeholder="you@example.com" onchange="validateEmail();checkRegisterForm()"
-                                            oninput="validateEmail();checkRegisterForm()" required>
+                                            class="form-control bg-light ps-1"
+                                            placeholder="you@example.com" onchange="validateEmail();checkRegisterForm()" required>
                                     </div>
                                     <small id="err-email" class="text-danger d-none">
                                         Enter a valid email address
@@ -130,10 +134,12 @@
                                         <span class="input-group-text bg-light border-end-0 text-secondary">
                                             <i data-lucide="lock" width="18"></i>
                                         </span>
-                                        <input type="password" class="form-control bg-light border-start-1 ps-1"
+                                        <input type="password" class="form-control bg-light ps-1"
                                             name="password" id="reg-password" placeholder="Create a password"
-                                            onchange="validatePassword();checkRegisterForm()"
-                                            oninput="validatePassword();checkRegisterForm()" required>
+                                            onchange="validatePassword();checkRegisterForm()" required>
+                                        <button type="button" class="input-group-text bg-light text-secondary" id="toggleRegPasswordBtn">
+                                            <i data-lucide="eye" width="18"></i>
+                                        </button>
                                     </div>
                                     <small id="err-password" class="text-danger d-none">
                                         Password must be at least 6 characters and must contain atleast 1 letter and 1
@@ -148,10 +154,12 @@
                                         <span class="input-group-text bg-light border-end-0 text-secondary">
                                             <i data-lucide="lock" width="18"></i>
                                         </span>
-                                        <input type="password" class="form-control bg-light border-start-1 ps-1"
+                                        <input type="password" class="form-control bg-light ps-1"
                                             name="password" id="reg-confirm" placeholder="Confirm password"
-                                            onchange="validateConfirmPassword();checkRegisterForm()"
-                                            oninput="validateConfirmPassword();checkRegisterForm()" required>
+                                            onchange="validateConfirmPassword();checkRegisterForm()" required>
+                                        <button type="button" class="input-group-text bg-light text-secondary" id="toggleConfirmPasswordBtn">
+                                            <i data-lucide="eye" width="18"></i>
+                                        </button>
                                     </div>
                                     <small id="err-confirm" class="text-danger d-none">
                                         Passwords do not match
@@ -165,16 +173,14 @@
                                         <span class="input-group-text bg-light border-end-0 text-secondary">
                                             <i data-lucide="map-pin" width="18"></i>
                                         </span>
-                                        <input type="text" class="form-control bg-light border-start-1 ps-1"
+                                        <input type="text" class="form-control bg-light ps-1"
                                             name="location" id="reg-location" placeholder="Location Format : District, State"
-                                            onchange="validateLocation();checkRegisterForm()"
-                                            oninput="validateLocation();checkRegisterForm()" required>
+                                            onchange="validateLocation();checkRegisterForm()" required>
                                     </div>
                                     <small id="err-location" class="text-danger d-none">
                                         Please Provide Valid Location
                                     </small>
                                 </div>
-
 
                                 <div class="col-md-6">
                                     <label for="reg-dob" class="form-label small fw-bold text-secondary">Date of
@@ -183,9 +189,8 @@
                                         <span class="input-group-text bg-light border-end-0 text-secondary">
                                             <i data-lucide="calendar" width="18"></i>
                                         </span>
-                                        <input type="date" class="form-control bg-light border-start-1 ps-1" name="dob"
-                                            id="reg-dob" onchange="validateDOB();checkRegisterForm()"
-                                            oninput="validateDOB();checkRegisterForm()" required>
+                                        <input type="date" class="form-control bg-light ps-1" name="dob"
+                                            id="reg-dob" onchange="validateDOB();checkRegisterForm()" required>
                                     </div>
                                     <small id="err-dob" class="text-danger d-none">
                                         You must be at least 13 years old
@@ -199,10 +204,9 @@
                                         <span class="input-group-text bg-light border-end-0 text-secondary">
                                             <i data-lucide="phone" width="18"></i>
                                         </span>
-                                        <input type="tel" class="form-control bg-light border-start-1 ps-1"
+                                        <input type="tel" class="form-control bg-light ps-1"
                                             name="mobile" maxlength="10" id="reg-mobile" placeholder="9876543210"
-                                            onchange="validateMobile();checkRegisterForm()"
-                                            oninput="validateMobile();checkRegisterForm()" required>
+                                            onchange="validateMobile();checkRegisterForm()" required>
                                     </div>
                                     <small id="err-mobile" class="text-danger d-none">Enter a 10-digit mobile
                                         number</small>
