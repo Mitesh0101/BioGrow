@@ -54,7 +54,6 @@ BioGrow — Farmer Community
                 {% for topic in topics %}
                 <article class="card mb-3 border-0 topic-card">
                     <div class="card-body">
-
                         <div class="d-flex align-items-center justify-content-between">
                             <div class="d-flex gap-3">
                                 <div class="avatar avatar-green">
@@ -156,6 +155,9 @@ BioGrow — Farmer Community
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
 
+            <!-- enctype is needed for sending both image and text data -->
+            <!-- It breaks the form into chunks (parts). One chunk for text fields, and separate, specialized chunks for
+                 binary files (images, PDFs, etc.). -->
             <form method="POST" enctype="multipart/form-data">
                 <div class="modal-header">
                     <h5 class="modal-title">Ask a Question</h5>
@@ -168,7 +170,7 @@ BioGrow — Farmer Community
                     <textarea name="description" class="form-control mb-3" rows="4" placeholder="Describe your problem"
                         required></textarea>
                     
-                    <input type="file" class="form-control" name="image" multiple>
+                    <input type="file" class="form-control mb-3" accept="image/png, image/jpeg, image/gif" name="image" multiple>
 
                     <select name="category" class="form-select">
                         <option value="">Select category</option>

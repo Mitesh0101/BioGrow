@@ -2,6 +2,8 @@
 __pycache__/
 *.pyc
 
+static/images
+
 # Virtual environment
 venv/
 

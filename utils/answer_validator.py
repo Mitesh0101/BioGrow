@@ -1,4 +1,3 @@
-import os
 from chatbot import client
 import json
 

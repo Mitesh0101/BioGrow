@@ -4,6 +4,7 @@ from difflib import SequenceMatcher
 from flask import Blueprint, render_template, request, redirect, url_for, session
 from sqlalchemy import func
 from flask import flash
+import os
 
 from extensions import db
 from models import Topic, Answer, User, PointTransaction , AnswerLike , AnswerComment , TopicImage
@@ -74,18 +75,20 @@ def farmer_community():
         )
         db.session.add(topic)
         db.session.commit()
-        # To get Image we have to write request.files.get()
-        file = request.files.get("image")
+        files = request.files.getlist("image")
 
-        if file and file.filename != "":
-            filepath = "static/images/"+file.filename
-            # Saves image to static/images/filename
-            file.save(filepath)
-            image = TopicImage(
-                topic_id = topic.topic_id,
-                image_path = "images/"+file.filename
-            )
-            db.session.add(image)
+        for file in files:
+            if file and file.filename != "":
+                filepath = os.path.join("static/images", file.filename)
+                
+                # Saves image to static/images/secure_filename
+                file.save(filepath)
+                
+                image = TopicImage(
+                    topic_id=topic.topic_id,
+                    image_path=f"images/{file.filename}"
+                )
+                db.session.add(image)
         award_points(session["user_id"], 2, "Created a community topic")
         db.session.commit()
         return redirect(url_for("community.farmer_community"))
@@ -187,7 +190,7 @@ def mark_best_answer(answer_id):
         ai_result = {"is_valid": False, "confidence": 0}
 
     if not ai_result.get("is_valid") or ai_result.get("confidence", 0) < 60:
-        flash("This answer did not meet quality standards.", "warning")
+        flash(ai_result.get("reason"), "warning")
         return redirect(url_for("community.view_topic", topic_id=topic.topic_id))
 
     # ---------------- COPY / SIMILARITY CHECK ----------------
@@ -294,6 +297,7 @@ def pin_topic(topic_id):
         db.session.commit()
 
         flash("Topic unpinned successfully.", "info")
+        # Redirects the user back to where they came from
         return redirect(request.referrer)
 
     # 💰 PIN COST

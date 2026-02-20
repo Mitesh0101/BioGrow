@@ -13,19 +13,18 @@
 
 <div class="container py-4">
     {% with messages = get_flashed_messages(with_categories=true) %}
-                        {% if messages %}
-                        {% for category, message in messages %}
-                        <div class="alert alert-{{ category }} mt-2">
-                            {{ message }}
-                        </div>
-                        {% endfor %}
-                        {% endif %}
-                        {% endwith %}
+    {% if messages %}
+    {% for category, message in messages %}
+    <div class="alert alert-{{ category }} mt-2">
+        {{ message }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
 
     <!-- ================= QUESTION CARD ================= -->
-    <div class="card mb-4 border-0 shadow-sm">
+    <div class="card mb-4 border-0">
         <div class="card-body">
-
             <div class="d-flex justify-content-between">
                 <h3 class="fw-bold mb-2">{{ topic.title }}</h3>
                 <a href="{{ url_for('community.farmer_community') }}" class="btn btn-outline-secondary rounded-pill">
@@ -62,12 +61,12 @@
 
     {% for answer in answers %}
     <div
-        class="card mb-3 border-0 {% if answer.is_best_solution %}border border-success border-2{% else %} border-0 {% endif %}">
+        class="card mb-3 {% if answer.is_best_solution %}border border-success border-2{% else %} border-0 {% endif %}">
         <div class="card-body">
-
             <p class="answer-text">{{ answer.answer_text }}</p>
             <form method="POST" action="{{ url_for('community.like_answer', answer_id=answer.answer_id) }}"
                 class="d-inline">
+                <!-- namespace creates a global variable so that it can be accessed outside the jinja loop -->
                 {% set ns = namespace(liked=false) %}
                 {% for like in answer.likes %}
                     {% if like.user_id == session["user_id"] %}
@@ -135,7 +134,7 @@
     {% endfor %}
 
     <!-- ================= ADD ANSWER FORM ================= -->
-    <div class="card mt-4 border-0 shadow-sm">
+    <div class="card mt-4 border-0">
         <div class="card-body">
             <h5 class="fw-bold mb-3">Your Answer</h5>
 
@@ -154,7 +153,7 @@
 <script>
     setTimeout(() => {
         document.querySelectorAll('.alert').forEach(a => a.remove());
-    }, 3000);
+    }, 10000);
 </script>
 
 {% endblock %}
