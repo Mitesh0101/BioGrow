@@ -27,6 +27,7 @@
 
                     <div class="d-flex gap-2 mt-1">
                         <span>🏅 {{ user.lifetime_points }} Lifetime Points </span>
+                        <span>🏅 {{ user.points }} Current Points </span>
                         <span>⭐ {{ user.badge }}</span>
                     </div>
                 </div>
@@ -118,7 +119,7 @@
         <div class="section-card mt-3">
             <h6 class="section-title">🎁 Available Rewards</h6>
 
-            <div class="reward green">
+            <div class="reward {% if user.points < 100 %}locked{% else %}green{% endif %}">
                 <div>
                     <strong>Priority Pin (24h)</strong>
                     <div class="small text-muted">Pin your question</div>
@@ -126,20 +127,12 @@
                 <span class="badge bg-success">100 pts</span>
             </div>
 
-            <div class="reward {% if user.points < 300 %}locked{% endif %}">
-                <div>
-                    <strong>Ad-Free Mode (30 days)</strong>
-                    <div class="small text-muted">Enjoy distraction-free browsing</div>
-                </div>
-                <span class="badge bg-primary">300 pts</span>
-            </div>
-
-            <div class="reward {% if user.points < 500 %}locked{% endif %}">
+            <div class="reward {% if user.points < 500 %}locked{% else %}green{% endif %}">
                 <div>
                     <strong>Expert Badge</strong>
                     <div class="small text-muted">Display expert status</div>
                 </div>
-                <span class="badge bg-warning text-dark">2000 pts</span>
+                <span class="badge bg-warning text-dark">500 pts</span>
             </div>
         </div>
 
