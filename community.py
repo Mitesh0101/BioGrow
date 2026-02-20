@@ -39,6 +39,7 @@ def award_points(user_id, points, reason):
             reason=reason
         )
     )
+    db.session.commit()
 
 
 # ---------------- DAILY BONUS ----------------
