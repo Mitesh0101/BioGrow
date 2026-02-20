@@ -39,6 +39,7 @@ def award_points(user_id, points, reason):
             reason=reason
         )
     )
+    db.session.commit()
 
 
 # ---------------- DAILY BONUS ----------------
@@ -177,6 +178,26 @@ def mark_best_answer(answer_id):
     if answer.is_best_solution:
         return redirect(url_for("community.view_topic", topic_id=topic.topic_id))
 
+    # ---------------- COPY / SIMILARITY CHECK ----------------
+    other_answers = Answer.query.filter(
+        # Get answers that belongs to this topic
+        Answer.topic_id == topic.topic_id,
+        # Excluding the current answer
+        Answer.answer_id != answer.answer_id
+    ).all()
+    
+    for other in other_answers:
+        similarity = SequenceMatcher(
+            # first arguement is is_junk => Do not ignore any characters
+            None,
+            answer.answer_text.lower().strip(),
+            other.answer_text.lower().strip()
+        ).ratio()
+
+        if similarity >= 0.80:
+            flash("This answer is too similar to an existing one.", "warning")
+            return redirect(url_for("community.view_topic", topic_id=topic.topic_id))
+        
     # ---------------- AI VALIDATION ----------------
     try:
         # json.loads() convert json string to python dictionary 
@@ -193,25 +214,6 @@ def mark_best_answer(answer_id):
         flash(ai_result.get("reason"), "warning")
         return redirect(url_for("community.view_topic", topic_id=topic.topic_id))
 
-    # ---------------- COPY / SIMILARITY CHECK ----------------
-    other_answers = Answer.query.filter(
-        # Get answers that belongs to this topic
-        Answer.topic_id == topic.topic_id,
-        # Excluding the current answer
-        Answer.answer_id != answer.answer_id
-    ).all()
-
-    for other in other_answers:
-        similarity = SequenceMatcher(
-            # first arguement is is_junk => Do not ignore any characters
-            None,
-            answer.answer_text.lower().strip(),
-            other.answer_text.lower().strip()
-        ).ratio()
-
-        if similarity >= 0.80:
-            flash("This answer is too similar to an existing one.", "warning")
-            return redirect(url_for("community.view_topic", topic_id=topic.topic_id))
 
     # ---------------- ENSURE SINGLE BEST ANSWER ----------------
     Answer.query.filter_by(

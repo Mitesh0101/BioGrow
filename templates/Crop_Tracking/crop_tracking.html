@@ -67,7 +67,25 @@
                     </h2>
                     <div id="collapseDaily" class="accordion-collapse collapse show" data-bs-parent="#logAccordion">
                         <div class="accordion-body">
-                            <label class="form-label small fw-bold text-muted">SOIL MOISTURE FEEL</label>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <label class="form-label small fw-bold text-muted mb-0">SOIL MOISTURE FEEL</label>
+                                <button class="btn btn-sm p-0 text-muted instructions-btn" type="button" data-bs-toggle="collapse" data-bs-target="#moistureHelp">
+                                    <i data-lucide="help-circle" width="16" class="me-1"></i>How to check?
+                                </button>
+                            </div>
+
+                            <!-- Moisture Test Instructions -->
+                            <div class="collapse mb-3" id="moistureHelp">
+                                <div class="container-fluid py-2 text-secondary small">
+                                    <strong>The "Squeeze Test":</strong> Dig down about 6 inches to root depth and grab a handful of soil. Squeeze it firmly. 
+                                    <ul class="mb-0 ps-3 mt-1">
+                                        <li><strong>Dry (Loose):</strong> Falls apart immediately, won't hold a shape.</li>
+                                        <li><strong>Moist (Sticky):</strong> Forms a ball, leaves a little moisture on your palm.</li>
+                                        <li><strong>Wet (Standing):</strong> Muddy, water actively drips when squeezed.</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
                             <div class="d-flex gap-2" id="moistureBox">
                                 <!-- The radio button itself isn't visible, The label acts like the radio button. -->
                                 <input type="radio" class="btn-check" name="moisture" id="moistureDry" value="Dry">
@@ -112,7 +130,26 @@
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label class="form-label small fw-bold text-muted">LEAF COLOR (LCC 1-6)</label>
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <label class="form-label small fw-bold text-muted mb-0">LEAF COLOR (LCC 1-6)</label>
+                                        <button class="btn btn-sm p-0 text-muted instructions-btn" type="button" data-bs-toggle="collapse" data-bs-target="#lccHelp">
+                                            <i data-lucide="help-circle" width="16" class="me-1"></i>How to read?
+                                        </button>
+                                    </div>
+
+                                    <!-- LCC Test Instructions -->
+                                    <div class="collapse mb-2" id="lccHelp">
+                                        <div class="container-fluid py-2 text-secondary small">
+                                            <strong>Reading the LCC:</strong>
+                                            <ul class="mb-0 ps-3 mt-1">
+                                                <li>Select the topmost fully expanded, healthy leaf.</li>
+                                                <li>Place the middle part of the leaf on the chart. <strong>Do not pluck it!</strong></li>
+                                                <li>Block direct sunlight with your body while comparing the color.</li>
+                                                <li>Match the leaf color to the closest panel (1 to 6).</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+
                                     <select class="form-select" name="lcc_score" id="lcc_score">
                                         <option value="" selected>Select Score...</option>
                                         <option value="1">1 - Yellowish Green (Starved)</option>
