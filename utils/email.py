@@ -1,5 +1,5 @@
 from flask_mail import Message
-from flask import current_app, render_template_string
+from flask import current_app
 from extensions import mail
 
 def send_otp_email(to_email, otp, full_name):

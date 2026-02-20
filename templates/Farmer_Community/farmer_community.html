@@ -33,21 +33,21 @@ BioGrow — Farmer Community
 
             <div class="col-12">
                 <div class="input-group input-group-lg">
-                    <span class="input-group-text bg-white border-0">
+                    <span class="input-group-text border-0">
                         🔍
                     </span>
                     <input class="form-control border-0" id="searchInput" type="search" placeholder="Search questions">
                 </div>
             </div>
             {% with messages = get_flashed_messages(with_categories=true) %}
-                        {% if messages %}
-                        {% for category, message in messages %}
-                        <div class="alert alert-{{ category }} mt-2">
-                            {{ message }}
-                        </div>
-                        {% endfor %}
-                        {% endif %}
-                        {% endwith %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }} mt-2">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
 
             <div class="col-lg-8">
 

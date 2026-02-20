@@ -1,10 +1,10 @@
-import random
+import random   # Used to generate OTP
 from datetime import datetime, timedelta
-import os
-import requests
+import os   # Used to get env
+import requests     # Used to fetch from weather API
 from flask import Flask, redirect, request, url_for, render_template, session,flash
 from werkzeug.security import generate_password_hash, check_password_hash
-from dotenv import load_dotenv
+from dotenv import load_dotenv  # Used to load environment variables
 
 from utils.email import send_otp_email
 from auth import auth_bp
@@ -38,17 +38,12 @@ app.register_blueprint(crop_tracking_bp)
 app.register_blueprint(auth_bp)
 app.register_blueprint(community_bp)
 
-
-# ================= AI VALIDATOR =================
-from utils.answer_validator import validate_answer_with_ai
-
 from utils.avtar import get_initials
 
 # ================= ROUTES =================
 @app.route("/")
 def home():
     return render_template("HomePage/home_page.html")
-
 
 # ---------------- LOGIN ----------------
 @app.route("/login", methods=["GET", "POST"])
@@ -88,6 +83,8 @@ def login():
             session["full_name"] = user.full_name
             session["initials"] = get_initials(user.full_name)
             session["location"] = user.location
+            give_daily_bonus(user.user_id)
+            
             return redirect(url_for("dashboard"))
 
         flash("Invalid email or Password","danger")
@@ -105,10 +102,6 @@ def dashboard():
 
     if not user_record.is_verified:
         return redirect(url_for("verify_otp", user_id=user_record.user_id))
-
-    give_daily_bonus(user_record.user_id)
-
-    
 
     # 🌤 WEATHER LOGIC
     api_key = os.getenv("WEATHER_API")
